@@ -6,18 +6,15 @@
     <bean id="readerCsvFiles" class="ru.otus.dataservice.ReaderResourceCsv">
         <constructor-arg index="0" value="questions.csv"/>
     </bean>
-    <bean id="QuestDao" class="ru.otus.dao.QuestDaoCsv">
+    <bean id="converter" class="ru.otus.converter.ConverterCSV"/>
+    <bean id="questDao" class="ru.otus.dao.QuestDaoCsv">
         <constructor-arg index="0" ref="readerCsvFiles"/>
-        <constructor-arg index="1" value=";"><description> delimiter </description></constructor-arg>
-        <constructor-arg index="2" value=":1">
-            <description> a </description>
-        </constructor-arg>
-
+        <constructor-arg index="1" ref="converter"/>
     </bean>
     <bean id="questionRepository" class="ru.otus.repository.QuestionRepositoryImpl">
-        <constructor-arg index="0" ref="QuestDao"/>
+        <constructor-arg index="0" ref="questDao"/>
     </bean>
-    <bean id="ioService" class="ru.otus.service.ConsoleIOService"></bean>
+    <bean id="ioService" class="ru.otus.service.ConsoleIOService"/>
     <bean id="questionService" class="ru.otus.service.QuestionServiceImpl">
         <constructor-arg index="0" ref="questionRepository"/>
         <constructor-arg index="1" ref="ioService"/>

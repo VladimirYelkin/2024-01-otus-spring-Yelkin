@@ -17,8 +17,8 @@ public class QuestionServiceImpl implements QuestionService {
         questionRepository.findAll()
                 .forEach(question -> {
                     ioService.println("%d: %s".formatted(question.id(), question.textOfQuestion()));
-                    question.answers().stream()
-                            .forEach(answer -> ioService.println(answer.toString()));
+                    question.answers()
+                            .forEach(answer -> ioService.println("%s".formatted(answer.textOfAnswer())));
                 });
     }
 }

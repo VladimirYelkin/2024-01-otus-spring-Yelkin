@@ -9,6 +9,6 @@ public class HomeWork01 {
 
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
         QuestionService questionService = context.getBean(QuestionService.class);
-        questionService.showAllQuestions();
+        questionService.outAllQuestions();
     }
 }

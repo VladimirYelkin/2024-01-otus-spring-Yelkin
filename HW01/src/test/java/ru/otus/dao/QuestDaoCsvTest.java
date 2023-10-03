@@ -70,13 +70,12 @@ class QuestDaoCsvTest {
     @BeforeEach
     void setUp() {
         readerResource = Mockito.mock(ReaderResource.class);
-        converter = Mockito.mock(Converter.class);
-//        questDao = new QuestDaoCsv(readerResource, converter);
     }
 
     @DisplayName("should be create correct List<Question> for given text")
     @Test
     void getAllTestWithMockConverter() {
+        converter = Mockito.mock(Converter.class);
         questDao = new QuestDaoCsv(readerResource, converter);
         BDDMockito.given(readerResource.getLines()).willReturn(dataFromResources);
         for (int i = 0; i < dataFromResources.size(); i++) {

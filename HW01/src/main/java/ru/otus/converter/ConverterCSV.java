@@ -27,19 +27,20 @@ public class ConverterCSV implements Converter {
         if (partsOfLine.length <= indexOfQuestion + minNumberOfAnswers) {
             throw new QuestionDaoException("incorrect data: " + line);
         }
+
         try {
-            id = Long.valueOf(partsOfLine[indexOfId]);
+            id = Long.parseLong(partsOfLine[indexOfId]);
         } catch (NumberFormatException e) {
             throw new QuestionDaoException("incorrect data: " + line, e);
         }
-        Function<String, Answer> stringToAnswer = string -> {
-            return string.endsWith(signOfCorrect) ?
-                    new Answer(string.substring(0, string.length() - signOfCorrect.length()), true) :
-                    new Answer(string);
-        };
+
+        Function<String, Answer> stringToAnswer = string -> string.endsWith(signOfCorrect) ?
+                new Answer(string.substring(0, string.length() - signOfCorrect.length()), true) :
+                new Answer(string);
         var answers = Arrays.stream(partsOfLine).skip(indexOfQuestion + 1)
                 .map(stringToAnswer)
                 .collect(Collectors.toList());
         return new Question(id, partsOfLine[indexOfQuestion], answers);
     }
+
 }

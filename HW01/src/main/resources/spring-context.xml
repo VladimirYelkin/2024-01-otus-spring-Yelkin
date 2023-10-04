@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
     <bean id="readerCsvFiles" class="ru.otus.dataservice.ReaderResourceCsv">
         <constructor-arg index="0" value="questions.csv"/>
     </bean>
@@ -11,7 +11,13 @@
         <constructor-arg index="0" ref="readerCsvFiles"/>
         <constructor-arg index="1" ref="converter"/>
     </bean>
-    <bean id="ioService" class="ru.otus.service.ConsoleIOService"/>
+    <bean id="ioService" class="ru.otus.service.ConsoleIOService">
+        <constructor-arg index="0">
+            <util:constant static-field="java.lang.System.out"/>
+        </constructor-arg>
+    </bean>
+
+
     <bean id="questionService" class="ru.otus.service.QuestionServiceImpl">
         <constructor-arg index="0" ref="questDao"/>
         <constructor-arg index="1" ref="ioService"/>

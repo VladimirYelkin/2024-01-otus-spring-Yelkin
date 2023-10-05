@@ -1,5 +1,5 @@
 package ru.otus.service;
 
 public interface QuestionService {
-     void outAllQuestions();
+     void printQuestions();
 }

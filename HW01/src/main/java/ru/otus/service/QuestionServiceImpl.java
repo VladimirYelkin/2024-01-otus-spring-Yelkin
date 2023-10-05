@@ -1,6 +1,6 @@
 package ru.otus.service;
 
-import ru.otus.dao.QuestDao;
+import ru.otus.dao.QuestionDao;
 import ru.otus.model.Question;
 
 import java.util.stream.Collectors;
@@ -11,18 +11,18 @@ public class QuestionServiceImpl implements QuestionService {
 
     private static final String TEMPLATE_TEXT_OF_ANSWERS = "%s\n";
 
-    private final QuestDao questDao;
+    private final QuestionDao questionDao;
 
     private final IOService ioService;
 
-    public QuestionServiceImpl(QuestDao questDao, IOService ioService) {
-        this.questDao = questDao;
+    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
+        this.questionDao = questionDao;
         this.ioService = ioService;
     }
 
     @Override
-    public void outAllQuestions() {
-        questDao.getAll()
+    public void printQuestions() {
+        questionDao.findAll()
                 .forEach(this::outQuestion);
     }
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import ru.otus.dao.QuestDao;
+import ru.otus.dao.QuestionDao;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
 
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.times;
 
 class QuestionServiceImplTest {
 
-    private QuestDao questDao;
+    private QuestionDao questionDao;
 
     private IOService ioService;
     private QuestionService questionService;
@@ -65,18 +65,18 @@ class QuestionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        questDao = Mockito.mock(QuestDao.class);
+        questionDao = Mockito.mock(QuestionDao.class);
         ioService = Mockito.mock(IOService.class);
-        questionService = new QuestionServiceImpl(questDao, ioService);
-        inOrder = inOrder(questDao,ioService);
+        questionService = new QuestionServiceImpl(questionDao, ioService);
+        inOrder = inOrder(questionDao,ioService);
     }
 
     @DisplayName("Should be correct out data ")
     @Test
     void outAllQuestions() {
-        BDDMockito.given(questDao.getAll()).willReturn(questionList);
-        questionService.outAllQuestions();
-        inOrder.verify(questDao,times(1)).getAll();
+        BDDMockito.given(questionDao.findAll()).willReturn(questionList);
+        questionService.printQuestions();
+        inOrder.verify(questionDao,times(1)).findAll();
         inOrder.verify(ioService,times(questionList.size())).println(Mockito.anyString());
     }
 }

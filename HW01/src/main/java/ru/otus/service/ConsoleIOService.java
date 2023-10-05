@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 public class ConsoleIOService implements IOService {
 
-    private final PrintStream printStream;
+    private final PrintStream printStream  ;
 
     public ConsoleIOService(PrintStream printStream) {
         this.printStream = printStream;

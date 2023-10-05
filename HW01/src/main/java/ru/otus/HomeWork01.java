@@ -1,14 +1,13 @@
 package ru.otus;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.otus.service.QuestionService;
+import ru.otus.service.TestRunnerService;
 
 
 public class HomeWork01 {
     public static void main(String[] args) {
-
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
-        QuestionService questionService = context.getBean(QuestionService.class);
-        questionService.outAllQuestions();
+        var testRunnerService = context.getBean(TestRunnerService.class);
+        testRunnerService.run();
     }
 }

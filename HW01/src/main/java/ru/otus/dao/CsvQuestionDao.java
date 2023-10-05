@@ -20,37 +20,6 @@ public class CsvQuestionDao implements QuestionDao {
     public CsvQuestionDao(TestFileNameProvider testFileNameProvider) {
         this.fileName = testFileNameProvider;
     }
-//
-//    @Override
-//    public List<Question> getAll() {
-//        return getQuestionsFrom(getLinesFromFile());
-//    }
-////
-//    public List<Question> getQuestionsFrom(List<String> list) {
-//        return list.stream()
-//                .map(converter::covertToQuest)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<String> getLinesFromFile() {
-//        try {
-//            ClassLoader classLoader = getClass().getClassLoader();
-//            InputStream inputStream = classLoader.getResourceAsStream(fileName);
-//            if (inputStream != null) {
-//                try (var streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-//                     var reader = new BufferedReader(streamReader)) {
-//                    return reader.lines().collect(Collectors.toList());
-//                } catch (IOException e) {
-//                    throw new QuestionDaoException(e);
-//                }
-//            } else {
-//                throw new QuestionDaoException("file not found! " + fileName);
-//            }
-//        } catch (SecurityException | NullPointerException e) {
-//            throw new QuestionDaoException(e);
-//        }
-//    }
-
 
     @Override
     public List<Question> findAll() {

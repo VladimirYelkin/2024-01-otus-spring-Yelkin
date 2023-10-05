@@ -57,7 +57,7 @@ class CsvQuestionDaoTest {
     private QuestionDao questionDao;
 
     private TestFileNameProvider testFileNameProvider;
-    private String fileName = "test-questions.csv";
+    private final String fileName = "test-questions.csv";
 
     @BeforeEach
     void setUp() {

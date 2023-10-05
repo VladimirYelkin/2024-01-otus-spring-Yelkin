@@ -14,7 +14,7 @@
     </bean>
     <bean id="ioService" class="ru.otus.service.ConsoleIOService">
         <constructor-arg index="0">
-            <util:constant static-field="java.lang.System.out"></util:constant>
+            <util:constant static-field="java.lang.System.out"/>
         </constructor-arg>
     </bean>
     <bean id="questionService" class="ru.otus.service.QuestionServiceImpl">

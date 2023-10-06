@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TestRunnerServiceImpl implements TestRunnerService {
 
-    private final QuestionService testService;
+    private final QuestionService questionService;
 
     @Override
     public void run() {
-        testService.printQuestions();
+        questionService.printQuestions();
     }
 }

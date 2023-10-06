@@ -9,9 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 public class QuestionServiceImpl implements QuestionService {
-    private static final Logger log = LoggerFactory.getLogger(QuestionServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     private static final String NOT_FOUND_DATA = "ERROR: NOT FOUND QUESTIONS";
+
     private static final String TEMPLATE_FULL_TEXT_OF_QUEST = "%d: %s\n%s";
 
     private static final String TEMPLATE_TEXT_OF_ANSWERS = "%s\n";
@@ -31,7 +32,7 @@ public class QuestionServiceImpl implements QuestionService {
             questionDao.findAll()
                     .forEach(this::outQuestion);
         } catch (QuestionDaoException e) {
-            log.error("QuestionDao error: {}", e);
+            LOG.error("QuestionDao error: {}", e);
             ioService.println(NOT_FOUND_DATA);
         }
     }

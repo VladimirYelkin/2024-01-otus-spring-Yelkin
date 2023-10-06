@@ -12,7 +12,7 @@
     <bean id="questionDao" class="ru.otus.dao.CsvQuestionDao">
         <constructor-arg index="0" ref="testFileNameProvider"/>
     </bean>
-    <bean id="ioService" class="ru.otus.service.ConsoleIOService">
+    <bean id="ioService" class="ru.otus.service.StreamIOService">
         <constructor-arg index="0">
             <util:constant static-field="java.lang.System.out"/>
         </constructor-arg>

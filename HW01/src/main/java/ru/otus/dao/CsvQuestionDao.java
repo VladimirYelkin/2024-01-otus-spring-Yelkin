@@ -5,6 +5,7 @@ import ru.otus.config.TestFileNameProvider;
 import ru.otus.dao.dto.QuestionDto;
 import ru.otus.exeption.QuestionDaoException;
 import ru.otus.model.Question;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,11 +28,12 @@ public class CsvQuestionDao implements QuestionDao {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream(fileName.getTestFileName());
             try (var streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-                return new CsvToBeanBuilder<QuestionDto>(streamReader)
+                var csvToBean = new CsvToBeanBuilder<QuestionDto>(streamReader)
                         .withType(QuestionDto.class)
-                        .withSeparator(';').build()
-                        .stream()
-                        .map(QuestionDto::toDomainObject).collect(Collectors.toList());
+                        .withSeparator(';').build();
+                return csvToBean.stream()
+                        .map(QuestionDto::toDomainObject)
+                        .collect(Collectors.toList());
             } catch (IOException e) {
                 throw new QuestionDaoException(e);
             }

@@ -24,21 +24,19 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream(fileName.getTestFileName());
-            try (var streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-                var csvToBean = new CsvToBeanBuilder<QuestionDto>(streamReader)
-                        .withType(QuestionDto.class)
-                        .withSeparator(';').build();
-                return csvToBean.stream()
-                        .map(QuestionDto::toDomainObject)
-                        .collect(Collectors.toList());
-            } catch (IOException e) {
-                throw new QuestionDaoException(e);
-            }
-        } catch (SecurityException | NullPointerException e) {
+
+        try (InputStream inputStream = getClass().getClassLoader().
+                getResourceAsStream(fileName.getTestFileName());
+             var streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+            var csvToBean = new CsvToBeanBuilder<QuestionDto>(streamReader)
+                    .withType(QuestionDto.class)
+                    .withSeparator(';').build();
+            return csvToBean.stream()
+                    .map(QuestionDto::toDomainObject)
+                    .collect(Collectors.toList());
+        } catch (SecurityException | NullPointerException | IOException e) {
             throw new QuestionDaoException(e);
         }
+
     }
 }

@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import ru.otus.dao.QuestionDao;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
+import ru.otus.service.io.IOService;
 
 import java.util.List;
 
@@ -77,6 +78,6 @@ class QuestionServiceImplTest {
         BDDMockito.given(questionDao.findAll()).willReturn(questionList);
         questionService.printQuestions();
         inOrder.verify(questionDao,times(1)).findAll();
-        inOrder.verify(ioService,times(questionList.size())).println(Mockito.anyString());
+        inOrder.verify(ioService,times(questionList.size())).printLine(Mockito.anyString());
     }
 }

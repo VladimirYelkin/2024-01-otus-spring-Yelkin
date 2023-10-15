@@ -1,12 +1,19 @@
 package ru.otus.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
-@AllArgsConstructor
+@Configuration
 @Data
-public class AppConfig implements TestFileNameProvider {
+@PropertySource(value = "classpath:application.properties")
+public class AppConfig implements TestFileNameProvider, TestConfig {
 
+    @Value("${test.rightAnswersCountToPass:5}")
+    private int rightAnswersCountToPass;
+
+    @Value("${test.fileName:defaultQuestions.csv}")
     private String testFileName;
 
     @Override

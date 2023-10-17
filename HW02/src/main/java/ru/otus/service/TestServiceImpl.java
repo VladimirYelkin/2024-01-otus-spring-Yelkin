@@ -16,27 +16,25 @@ public class TestServiceImpl implements TestService {
 
     private final IOService ioService;
 
-    private final QuestionDao questionDao;
-
-    private final StudentService studentService;
-
-    private final ResultService resultService;
-
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
-        var questions = questionDao.findAll();
+        var questions = questionService.findAll();
         var testResult = new TestResult(student);
 
         questions.forEach(question -> {
             questionService.outQuestion(question);
             int maxIndexAnswers = questionService.getMaxIndexAnswers(question);
-            int idAnswer = ioService.readIntForRangeWithPrompt(1, maxIndexAnswers,
-                    "Input number of answer (1-%d): ".formatted(maxIndexAnswers), "not correct answer");
+            int idAnswer = readAnswerFromStudent(1,maxIndexAnswers);
             boolean isAnswerValid = questionService.checkAnswer(question, idAnswer);
             testResult.applyAnswer(question, isAnswerValid);
         });
         return testResult;
+    }
+
+    private int readAnswerFromStudent (int startIndexOfAnswers, int endIndexOfAnswers) {
+        return ioService.readIntForRangeWithPrompt(startIndexOfAnswers, endIndexOfAnswers,
+                "Input number of answer (%d-%d): ".formatted(startIndexOfAnswers,endIndexOfAnswers), "not correct answer");
     }
 }

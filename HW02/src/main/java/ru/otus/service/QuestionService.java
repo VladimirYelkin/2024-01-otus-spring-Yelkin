@@ -2,8 +2,12 @@ package ru.otus.service;
 
 import ru.otus.model.Question;
 
+import java.util.List;
+
 public interface QuestionService {
      void printQuestions();
+
+     List<Question> findAll();
 
      public void outQuestion(Question question);
 

@@ -6,6 +6,7 @@ import ru.otus.dao.QuestionDao;
 import ru.otus.model.Question;
 import ru.otus.service.io.IOService;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -21,15 +22,15 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao questionDao;
 
     private final IOService ioService;
-//
-//    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
-//        this.questionDao = questionDao;
-//        this.ioService = ioService;
-//    }
 
     @Override
     public void printQuestions() {
         questionDao.findAll().forEach(this::outQuestion);
+    }
+
+    @Override
+    public List<Question> findAll() {
+        return questionDao.findAll();
     }
 
     @Override

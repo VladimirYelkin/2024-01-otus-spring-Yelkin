@@ -14,25 +14,25 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="APP_LOG" class="ch.qos.logback.core.FileAppender">
+    <appender name="DEBUG_LOG" class="ch.qos.logback.core.FileAppender">
         <!--    <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
         <!--      <level>INFO</level>-->
         <!--      <onMatch>ACCEPT</onMatch>-->
         <!--      <onMismatch>DENY</onMismatch>-->
         <!--    </filter>-->
 
-        <file>logs/hw01/application.log</file>
+        <file>logs/hw02/application_debug.log</file>
         <encoder>
-            <pattern>%date %level [%thread] [%file:%line] %msg%n</pattern>
+            <pattern>%date %level [%thread] %logger{36} %msg%n</pattern>
         </encoder>
     </appender>
 
-<!--    <logger name="ru.otus.service.QuestionServiceImpl" level="error">-->
-<!--        <appender-ref ref="APP_LOG"/>-->
-<!--    </logger>-->
+    <logger name="ru.otus.logging.LoggingAspect" level="DEBUG" additivity="false">
+        <appender-ref ref="DEBUG_LOG"/>
+    </logger>
 
-    <root level="error">
-        <appender-ref ref="APP_LOG"/>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>

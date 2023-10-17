@@ -3,6 +3,7 @@ package ru.otus.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.dao.QuestionDao;
+import ru.otus.logging.LoggingData;
 import ru.otus.model.Question;
 import ru.otus.service.io.IOService;
 
@@ -29,6 +30,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @LoggingData
     public List<Question> findAll() {
         return questionDao.findAll();
     }

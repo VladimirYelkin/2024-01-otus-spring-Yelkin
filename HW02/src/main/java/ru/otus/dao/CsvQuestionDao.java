@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.otus.config.TestFileNameProvider;
 import ru.otus.dao.dto.QuestionDto;
 import ru.otus.exeption.QuestionDaoException;
+import ru.otus.logging.LoggingData;
 import ru.otus.model.Question;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class CsvQuestionDao implements QuestionDao {
     }
 
     @Override
+    @LoggingData
     public List<Question> findAll() {
 
         try (var inputStream = getClass().getClassLoader().getResourceAsStream(fileName.getTestFileName());

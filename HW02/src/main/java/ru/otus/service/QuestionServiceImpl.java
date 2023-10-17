@@ -1,5 +1,6 @@
 package ru.otus.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.dao.QuestionDao;
 import ru.otus.model.Question;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
 
     private static final String TEMPLATE_FULL_TEXT_OF_QUEST = "%d: %s\n%s";
@@ -19,22 +21,21 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao questionDao;
 
     private final IOService ioService;
-
-    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
-        this.questionDao = questionDao;
-        this.ioService = ioService;
-    }
+//
+//    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
+//        this.questionDao = questionDao;
+//        this.ioService = ioService;
+//    }
 
     @Override
     public void printQuestions() {
-        questionDao.findAll()
-                .forEach(this::outQuestion);
+        questionDao.findAll().forEach(this::outQuestion);
     }
 
     @Override
     public void outQuestion(Question question) {
-        AtomicInteger idOfAnswer = new AtomicInteger(1);
-        String textOfAnswers = question.answers().stream()
+        var idOfAnswer = new AtomicInteger(1);
+        var textOfAnswers = question.answers().stream()
                 .map(answer ->
                         TEMPLATE_TEXT_OF_ANSWERS_WITH_ID.formatted(idOfAnswer.getAndIncrement(), answer.textOfAnswer()))
                 .collect(Collectors.joining());

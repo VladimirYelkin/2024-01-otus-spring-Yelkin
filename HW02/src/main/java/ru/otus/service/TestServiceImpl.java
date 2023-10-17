@@ -31,9 +31,9 @@ public class TestServiceImpl implements TestService {
 
         questions.forEach(question -> {
             questionService.outQuestion(question);
-            int maxIdOfAnswer = questionService.getMaxIndexAnswers(question);
-            int idAnswer = ioService.readIntForRangeWithPrompt(1, maxIdOfAnswer,
-                    "Input number of answer (1-%d): ".formatted(maxIdOfAnswer), "not correct answer");
+            int maxIndexAnswers = questionService.getMaxIndexAnswers(question);
+            int idAnswer = ioService.readIntForRangeWithPrompt(1, maxIndexAnswers,
+                    "Input number of answer (1-%d): ".formatted(maxIndexAnswers), "not correct answer");
             boolean isAnswerValid = questionService.checkAnswer(question, idAnswer);
             testResult.applyAnswer(question, isAnswerValid);
         });

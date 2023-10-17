@@ -1,7 +1,7 @@
 package ru.otus.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 import ru.otus.config.TestFileNameProvider;
 import ru.otus.dao.dto.QuestionDto;
 import ru.otus.exeption.QuestionDaoException;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Configuration
+@Repository
 public class CsvQuestionDao implements QuestionDao {
 
     private final TestFileNameProvider fileName;

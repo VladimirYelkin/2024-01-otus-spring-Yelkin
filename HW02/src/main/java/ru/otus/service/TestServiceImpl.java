@@ -2,7 +2,6 @@ package ru.otus.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.dao.QuestionDao;
 import ru.otus.model.Student;
 import ru.otus.model.TestResult;
 import ru.otus.service.io.IOService;
@@ -26,15 +25,16 @@ public class TestServiceImpl implements TestService {
         questions.forEach(question -> {
             questionService.outQuestion(question);
             int maxIndexAnswers = questionService.getMaxIndexAnswers(question);
-            int idAnswer = readAnswerFromStudent(1,maxIndexAnswers);
+            int idAnswer = readIdOfAnswerFromInput(1,maxIndexAnswers);
             boolean isAnswerValid = questionService.checkAnswer(question, idAnswer);
             testResult.applyAnswer(question, isAnswerValid);
         });
         return testResult;
     }
 
-    private int readAnswerFromStudent (int startIndexOfAnswers, int endIndexOfAnswers) {
+    private int readIdOfAnswerFromInput(int startIndexOfAnswers, int endIndexOfAnswers) {
         return ioService.readIntForRangeWithPrompt(startIndexOfAnswers, endIndexOfAnswers,
-                "Input number of answer (%d-%d): ".formatted(startIndexOfAnswers,endIndexOfAnswers), "not correct answer");
+                "Input number of answer (%d-%d): ".formatted(startIndexOfAnswers,endIndexOfAnswers)
+                , "not correct answer");
     }
 }

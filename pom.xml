@@ -17,15 +17,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.0.12</spring.version>
         <junit.version>5.8.1</junit.version>
-        <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
         <checkstyle.version>10.11.0</checkstyle.version>
         <assertj.core.version>3.24.2</assertj.core.version>
         <mockito.junit.jupiter.version>5.5.0</mockito.junit.jupiter.version>
         <checkstyle.config.url>https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml
         </checkstyle.config.url>
+        <aspectj.version>1.9.19</aspectj.version>
         <maven.shade.plugin.version>3.5.1</maven.shade.plugin.version>
         <opencsv.version>5.8</opencsv.version>
         <lombok.version>1.18.28</lombok.version>
+        <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -80,11 +82,33 @@
                 <version>${mockito.junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
         <module>HW01</module>
+        <module>HW02</module>
     </modules>
     <build>
         <plugins>

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.HomeWork02;
+import ru.otus.HomeWork03;
 import ru.otus.dao.QuestionDao;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @DisplayName("Метод сервиса чтения вопросов должен ")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HomeWork02.class, TestContextConfig.class})
+@ContextConfiguration(classes = {HomeWork03.class, TestContextConfig.class})
 class CsvQuestionDaoTest {
 
     private final List<Question> questionList = List.of(

@@ -6,7 +6,7 @@ import ru.otus.dao.QuestionDao;
 import ru.otus.model.Question;
 import ru.otus.model.Student;
 import ru.otus.model.TestResult;
-import ru.otus.service.io.IOService;
+import ru.otus.service.localize.LocalizedIOService;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -21,12 +21,13 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printLineLocalized("TestService.answer.the.questions");
+        ioService.printLine("");
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
@@ -40,9 +41,9 @@ public class TestServiceImpl implements TestService {
     }
 
     private int readIdOfAnswerFromInput(int startIndexOfAnswers, int endIndexOfAnswers) {
-        return ioService.readIntForRangeWithPrompt(startIndexOfAnswers, endIndexOfAnswers,
-                "Input number of answer (%d-%d): ".formatted(startIndexOfAnswers, endIndexOfAnswers)
-                , "not correct answer");
+        return ioService.readIntForRangeWithPromptLocalized(startIndexOfAnswers, endIndexOfAnswers,
+                "TestService.input.answer.id"
+                , "TestService.error.answer.id");
     }
 
     private void outQuestion(Question question) {

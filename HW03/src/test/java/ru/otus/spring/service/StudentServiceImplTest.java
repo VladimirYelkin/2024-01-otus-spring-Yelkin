@@ -5,19 +5,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.HomeWork02;
+import ru.otus.HomeWork03;
 import ru.otus.model.Student;
 import ru.otus.service.StudentService;
 import ru.otus.service.io.IOService;
+import ru.otus.service.localize.LocalizedIOService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @DisplayName("Метод сервиса создания студента должен ")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HomeWork02.class, TestContextConfig.class})
+@ContextConfiguration(classes = {HomeWork03.class, TestContextConfig.class})
 class StudentServiceImplTest {
 
     private static final String FIRST_NAME = "First name";
@@ -27,13 +30,13 @@ class StudentServiceImplTest {
     @Autowired
     private StudentService studentService;
 
-    @Autowired
-    private IOService ioService;
+    @Autowired()
+    private LocalizedIOService ioService;
 
     @BeforeEach
     void setUp() {
-        given(ioService.readStringWithPrompt("Please input your first name")).willReturn(FIRST_NAME);
-        given(ioService.readStringWithPrompt("Please input your last name")).willReturn(LAST_NAME);
+        given(ioService.readStringWithPromptLocalized("StudentService.input.first.name")).willReturn(FIRST_NAME);
+        given(ioService.readStringWithPromptLocalized("StudentService.input.last.name")).willReturn(LAST_NAME);
     }
 
     @Test

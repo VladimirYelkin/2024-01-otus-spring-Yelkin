@@ -3,18 +3,18 @@ package ru.otus.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.model.Student;
-import ru.otus.service.io.IOService;
+import ru.otus.service.localize.LocalizedIOService;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     @Override
     public Student determineCurrentStudent() {
-        var firstName = ioService.readStringWithPrompt("Please input your first name");
-        var lastName = ioService.readStringWithPrompt("Please input your last name");
+        var firstName = ioService.readStringWithPromptLocalized("StudentService.input.first.name");
+        var lastName = ioService.readStringWithPromptLocalized("StudentService.input.last.name");
         return new Student(firstName, lastName);
     }
 }

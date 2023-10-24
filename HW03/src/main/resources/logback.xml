@@ -21,7 +21,7 @@
         <!--      <onMismatch>DENY</onMismatch>-->
         <!--    </filter>-->
 
-        <file>logs/hw02/application_debug.log</file>
+        <file>logs/hw03/application_debug.log</file>
         <encoder>
             <pattern>%date %level [%thread] %logger{36} %msg%n</pattern>
         </encoder>

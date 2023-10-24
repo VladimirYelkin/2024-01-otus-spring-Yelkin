@@ -29,7 +29,7 @@ public class AppConfig implements TestFileNameProvider, TestConfig, LocaleConfig
 
     @Override
     public String getTestFileName() {
-        return fileNameByLocaleTag.get(locale.toLanguageTag());
+        return fileNameByLocaleTag.getOrDefault(locale.toLanguageTag(),fileNameByLocaleTag.get("default"));
     }
 
 }

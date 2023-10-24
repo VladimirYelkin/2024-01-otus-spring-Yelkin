@@ -4,7 +4,6 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import ru.otus.service.io.IOService;
 import ru.otus.service.localize.LocalizedIOService;
 
 @Configuration

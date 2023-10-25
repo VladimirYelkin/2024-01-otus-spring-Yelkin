@@ -121,8 +121,8 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>HW01</module>
-        <module>HW02</module>
+<!--        <module>HW01</module>-->
+<!--        <module>HW02</module>-->
         <module>HW03</module>
     </modules>
     <build>

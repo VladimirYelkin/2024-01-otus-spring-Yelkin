@@ -1,4 +1,4 @@
-# Add your questions here. This line should be skipped when setting up CsvToBean (withSkipLines)
+# List of questions with possible answers. The correct one is marked - :1
 1;What is the largest planet in the Solar System?;Jupiter:1;Earth;Saturn;Mercury;Venus
 2;What is the smallest planet in the Solar System?;Earth;Mercury:1;Mars
 3;Which is the hottest planet in the solar system?;Mercury;Venus:1;Saturn

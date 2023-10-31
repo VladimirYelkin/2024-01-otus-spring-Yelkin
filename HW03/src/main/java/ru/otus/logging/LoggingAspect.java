@@ -37,7 +37,7 @@ public class LoggingAspect {
             if (!questionList.isEmpty()) {
                 logger.debug("result: {}",
                         questionList.stream()
-                                .map(obj -> obj.toString())
+                                .map(Question::toString)
                                 .collect(Collectors.joining(";", "[", "]")));
 
             } else {

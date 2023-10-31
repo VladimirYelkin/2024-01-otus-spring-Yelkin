@@ -4,11 +4,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import static org.assertj.core.api.Assertions.*;
 
 import ru.otus.dao.QuestionDao;
 import ru.otus.model.Answer;
@@ -21,7 +18,7 @@ import ru.otus.service.localize.LocalizedIOService;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,10 +60,6 @@ class TestServiceImplTest {
         inOrder.verify(ioService, times(1)).printLine("");
         inOrder.verify(ioService, times(5)).printLine(anyString());
         assertThat(actual).usingRecursiveComparison().isEqualTo(expectedResult);
-    }
-
-    @AfterEach
-    void tearDown() {
     }
 
     private List<Question> generateQuestions() {

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import ru.otus.model.Question;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Aspect
@@ -29,20 +28,25 @@ public class LoggingAspect {
     }
 
     @AfterReturning(value = "@annotation(ru.otus.logging.LoggingData)", returning = "questions")
-    public void logAfter(JoinPoint joinPoint, List<Question> questions) {
+    public void logAfter(JoinPoint joinPoint, Object questions) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        if ((questions != null) && (!questions.isEmpty())) {
-            logger.debug("return from method {}, {}, {}", joinPoint.getThis().getClass().getName(),
-                    joinPoint.getTarget().getClass().getName(), signature);
-            logger.debug("result: {}",
-                    questions.stream()
-                            .map(Objects::toString)
-                            .collect(Collectors.joining(";", "[", "]")));
+        logger.debug("return from method {}, {}, {}", joinPoint.getThis().getClass().getName(),
+                joinPoint.getTarget().getClass().getName(), signature);
+        try {
+            List<Question> questionList = (List<Question>) questions;
+            if (!questionList.isEmpty()) {
+                logger.debug("result: {}",
+                        questionList.stream()
+                                .map(obj -> obj.toString())
+                                .collect(Collectors.joining(";", "[", "]")));
 
-        } else {
-            logger.debug("Data return is empty in {}, {}, {}",
-                    joinPoint.getThis().getClass().getName(),
-                    joinPoint.getTarget().getClass().getName(), signature);
+            } else {
+                logger.debug("Data return is empty in {}, {}, {}",
+                        joinPoint.getThis().getClass().getName(),
+                        joinPoint.getTarget().getClass().getName(), signature);
+            }
+        } catch (ClassCastException | NullPointerException exception) {
+            logger.debug("Exception in loggerData: {}", exception.getMessage());
         }
     }
 }

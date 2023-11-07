@@ -3,6 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.4</version>
+        <relativePath/>
+    </parent>
 
     <groupId>ru.otus</groupId>
     <artifactId>HomeWorks</artifactId>
@@ -28,6 +34,8 @@
         <opencsv.version>5.8</opencsv.version>
         <lombok.version>1.18.28</lombok.version>
         <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
+        <minimal.maven.version>3.3.9</minimal.maven.version>
+        <spring.boot.starter.version>3.1.4</spring.boot.starter.version>
     </properties>
     <dependencies>
         <dependency>
@@ -60,9 +68,15 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.starter.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -107,8 +121,9 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>HW01</module>
-        <module>HW02</module>
+<!--        <module>HW01</module>-->
+<!--        <module>HW02</module>-->
+        <module>HW03</module>
     </modules>
     <build>
         <plugins>

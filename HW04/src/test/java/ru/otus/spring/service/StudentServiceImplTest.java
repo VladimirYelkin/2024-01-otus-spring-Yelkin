@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.HomeWork03;
+import ru.otus.HomeWork04;
 import ru.otus.model.Student;
 import ru.otus.service.StudentService;
 import ru.otus.service.localize.LocalizedIOService;
@@ -17,7 +17,7 @@ import static org.mockito.BDDMockito.given;
 
 @DisplayName("Метод сервиса создания студента должен ")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HomeWork03.class, TestContextConfig.class})
+@ContextConfiguration(classes = {HomeWork04.class, TestContextConfig.class})
 class StudentServiceImplTest {
 
     private static final String FIRST_NAME = "First name";

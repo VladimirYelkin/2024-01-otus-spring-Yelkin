@@ -9,8 +9,8 @@ import ru.otus.config.AppConfig;
 @EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableConfigurationProperties(AppConfig.class)
-public class HomeWork03 {
+public class HomeWork04 {
     public static void main(String[] args) {
-        SpringApplication.run(HomeWork03.class, args);
+        SpringApplication.run(HomeWork04.class, args);
     }
 }

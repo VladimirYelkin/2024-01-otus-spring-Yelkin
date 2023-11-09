@@ -29,5 +29,4 @@ public class AppConfig implements TestFileNameProvider, TestConfig, LocaleConfig
     public String getTestFileName() {
         return fileNameByLocaleTag.getOrDefault(locale.toLanguageTag(),fileNameByLocaleTag.get("default"));
     }
-
 }

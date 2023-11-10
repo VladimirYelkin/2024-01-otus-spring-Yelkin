@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.config.TestFileNameProvider;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
@@ -13,6 +16,7 @@ import ru.otus.model.Question;
 import java.util.List;
 
 @DisplayName("QuestDaoCsv")
+@SpringBootTest(classes = {CsvQuestionDao.class, TestFileNameProvider.class } )
 class CsvQuestionDaoTest {
 
 
@@ -54,14 +58,15 @@ class CsvQuestionDaoTest {
             )
     );
 
+    @Autowired
     private QuestionDao questionDao;
 
+    @MockBean
     private TestFileNameProvider testFileNameProvider;
     private final String fileName = "test-questions.csv";
 
     @BeforeEach
     void setUp() {
-        testFileNameProvider = Mockito.mock(TestFileNameProvider.class);
         BDDMockito.given(testFileNameProvider.getTestFileName()).willReturn(fileName);
 
     }
@@ -69,9 +74,8 @@ class CsvQuestionDaoTest {
     @DisplayName("should be create correct List<Question> for given text")
     @Test
     void getAllTestWithMockConverter() {
-
-        questionDao = new CsvQuestionDao(testFileNameProvider);
         List<Question> actualQuests = questionDao.findAll();
+
         Assertions.assertIterableEquals(actualQuests, questionList);
     }
 

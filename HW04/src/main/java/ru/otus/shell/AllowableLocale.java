@@ -10,7 +10,5 @@ public enum AllowableLocale {
     ru ("ru-RU"),
     en ("en-US");
 
-   public String value;
-
-
+   private String value;
 }

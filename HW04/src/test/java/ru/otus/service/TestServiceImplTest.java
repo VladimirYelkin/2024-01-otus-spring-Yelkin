@@ -1,41 +1,45 @@
-package ru.otus.spring.service;
+package ru.otus.service;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
-
 import ru.otus.dao.QuestionDao;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
 import ru.otus.model.Student;
 import ru.otus.model.TestResult;
-import ru.otus.service.TestService;
-import ru.otus.service.TestServiceImpl;
 import ru.otus.service.localize.LocalizedIOService;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("Тестируемый класс TestServiceImpl ")
+@SpringBootTest
 class TestServiceImplTest {
+
+    @Autowired
     TestService testService;
-    @Mock
+
+    @MockBean
     private QuestionDao questionDao;
 
-    @Mock
+    @MockBean
     private LocalizedIOService ioService;
 
     private InOrder inOrder;
 
     @BeforeEach
     void setUp() {
-        testService = new TestServiceImpl(questionDao, ioService);
         inOrder = inOrder(ioService);
 
     }

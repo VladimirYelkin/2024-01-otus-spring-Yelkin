@@ -25,7 +25,7 @@ public class ApplicationEventsCommands {
     }
 
     @ShellMethod(value = "Start test", key = {"s", "start"})
-    public String startTest() throws Exception {
+    public String startTest()  {
         testRunnerService.run();
         return localizedIOService.getMessage("Shell.info.finished");
     }

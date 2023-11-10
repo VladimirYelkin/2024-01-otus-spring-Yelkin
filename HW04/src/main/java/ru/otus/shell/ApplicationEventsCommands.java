@@ -20,7 +20,7 @@ public class ApplicationEventsCommands {
 
     @ShellMethod(value = "Set locale ", key = {"l","locale"})
     public String locale(@ShellOption(defaultValue = "ru", help = "locale [ru,en]") AllowableLocale locale) {
-        localeConfig.setLocale(locale.getValue().toString());
+        localeConfig.setLocale(locale.getValue());
         return localizedIOService.getMessage("Shell.info.prompt", localeConfig.getLocale());
     }
 

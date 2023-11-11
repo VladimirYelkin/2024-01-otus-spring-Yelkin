@@ -19,8 +19,8 @@ public class ApplicationEventsCommands {
     private final LocaleConfig localeConfig;
 
     @ShellMethod(value = "Set locale ", key = {"l","locale"})
-    public String locale(@ShellOption(defaultValue = "ru", help = "locale [ru,en]") AllowableLocale locale) {
-        localeConfig.setLocale(locale.getValue());
+    public String locale(@ShellOption(defaultValue = "ru-RU", help = "locale [ru-RU,en-EN]") String locale) {
+        localeConfig.setLocale(locale);
         return localizedIOService.getMessage("Shell.info.prompt", localeConfig.getLocale());
     }
 

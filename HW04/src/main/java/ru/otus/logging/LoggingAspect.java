@@ -32,21 +32,24 @@ public class LoggingAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         logger.debug("return from method {}, {}, {}", joinPoint.getThis().getClass().getName(),
                 joinPoint.getTarget().getClass().getName(), signature);
-        try {
-            List<Question> questionList = (List<Question>) questions;
-            if (!questionList.isEmpty()) {
-                logger.debug("result: {}",
-                        questionList.stream()
-                                .map(Question::toString)
-                                .collect(Collectors.joining(";", "[", "]")));
+        if (questions == null) {
+            logger.debug("Data return is Null in {}, {}, {}", joinPoint.getThis().getClass().getName(),
+                    joinPoint.getTarget().getClass().getName(), signature);
+            return;
+        }
 
-            } else {
-                logger.debug("Data return is empty in {}, {}, {}",
-                        joinPoint.getThis().getClass().getName(),
+        if (questions instanceof List<?> listOfQuestions) {
+            if (listOfQuestions.isEmpty()) {
+                logger.debug("Data return is Empty in {}, {}, {}", joinPoint.getThis().getClass().getName(),
                         joinPoint.getTarget().getClass().getName(), signature);
+                return;
             }
-        } catch (ClassCastException | NullPointerException exception) {
-            logger.debug("Exception in loggerData: {}", exception.getMessage());
+            var msg = listOfQuestions.stream()
+                    .filter(Question.class::isInstance)
+                    .map(Question.class::cast)
+                    .map(Object::toString)
+                    .collect(Collectors.joining(";", "[", "]"));
+            logger.debug("result: {}", msg);
         }
     }
 }

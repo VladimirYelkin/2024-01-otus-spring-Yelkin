@@ -15,7 +15,12 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -83,7 +88,7 @@ public class BookRepositoryJdbc implements BookRepository {
                     .filter(bookGenreRelation -> bookGenreRelation.bookId == book.getId())
                     .map(bookGenreRelation -> genreMap.get(bookGenreRelation.genreId))
                     .toList();
-            book.getGenres().addAll(genresOfBook);
+            book.setGenres(genresOfBook);
         });
     }
 
@@ -106,7 +111,8 @@ public class BookRepositoryJdbc implements BookRepository {
                 "authorId", book.getAuthor().getId());
 
         removeGenresRelationsFor(book);
-        namedParameterJdbcOperations.update("UPDATE books SET title = :title, author_id = :authorId where id = :id", params);
+        namedParameterJdbcOperations.update("UPDATE books SET title = :title, author_id = :authorId where id = :id",
+                params);
         batchInsertGenresRelationsFor(book);
         return book;
     }
@@ -136,7 +142,7 @@ public class BookRepositoryJdbc implements BookRepository {
             return new Book(rs.getLong("id"),
                     rs.getString("title"),
                     new Author(rs.getLong("author_id"), rs.getString("author_name")),
-                    new ArrayList<>()
+                    Collections.emptyList()
             );
         }
     }
@@ -162,7 +168,7 @@ public class BookRepositoryJdbc implements BookRepository {
             Book bookResult = null;
             while (rs.next()) {
                 long id = rs.getLong("id");
-                if (bookResult == null) {
+                if (Objects.isNull(bookResult)) {
                     String title = rs.getString("title");
                     long authorId = rs.getLong("author_id");
                     String authorName = rs.getString("author_name");

@@ -29,7 +29,7 @@ public class GenreRepositoryJdbc implements GenreRepository {
     public List<Genre> findAllByIds(List<Long> ids) {
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         return namedParameterJdbcOperations.query("select id, name from genres where id in (:ids)",
-                parameters, new GnreRowMapper() );
+                parameters, new GnreRowMapper());
     }
 
     private static class GnreRowMapper implements RowMapper<Genre> {

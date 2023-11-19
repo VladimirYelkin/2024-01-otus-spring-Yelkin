@@ -3,7 +3,11 @@ package ru.otus.hw.repositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -14,6 +18,7 @@ import ru.otus.hw.models.Genre;
 
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +45,8 @@ class BookRepositoryJdbcTest {
 
     @DisplayName("должен загружать книгу по id")
     @ParameterizedTest
-    @MethodSource("getDbBooks")
+//    @MethodSource("getDbBooksExpected")
+    @ArgumentsSource(CorrectParamsBooks.class)
     void shouldReturnCorrectBookById(Book expectedBook) {
         var actualBook = repositoryJdbc.findById(expectedBook.getId());
         assertThat(actualBook).isPresent()
@@ -126,9 +132,18 @@ class BookRepositoryJdbcTest {
                 .toList();
     }
 
-    private static List<Book> getDbBooks() {
+    private static List<Book> getDbBooksExpected() {
         var dbAuthors = getDbAuthors();
         var dbGenres = getDbGenres();
         return getDbBooks(dbAuthors, dbGenres);
+    }
+
+    private static class CorrectParamsBooks implements ArgumentsProvider {
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
+            var dbAuthors = getDbAuthors();
+            var dbGenres = getDbGenres();
+            return getDbBooks(dbAuthors, dbGenres).stream().map(book -> Arguments.of(book));
+        }
     }
 }

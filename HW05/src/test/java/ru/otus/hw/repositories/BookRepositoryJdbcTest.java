@@ -44,7 +44,7 @@ class BookRepositoryJdbcTest {
 
     @DisplayName("должен загружать книгу по id")
     @ParameterizedTest
-    @ArgumentsSource(CorrectParamsBooks.class)
+    @ArgumentsSource(DbBooksExpected.class)
     void shouldReturnCorrectBookById(Book expectedBook) {
         var actualBook = repositoryJdbc.findById(expectedBook.getId());
         assertThat(actualBook).isPresent()
@@ -129,18 +129,12 @@ class BookRepositoryJdbcTest {
                 .toList();
     }
 
-    private static List<Book> getDbBooksExpected() {
-        var dbAuthors = getDbAuthors();
-        var dbGenres = getDbGenres();
-        return getDbBooks(dbAuthors, dbGenres);
-    }
-
-    private static class CorrectParamsBooks implements ArgumentsProvider {
+    private static class DbBooksExpected implements ArgumentsProvider {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
             var dbAuthors = getDbAuthors();
             var dbGenres = getDbGenres();
-            return getDbBooks(dbAuthors, dbGenres).stream().map(book -> Arguments.of(book));
+            return getDbBooks(dbAuthors, dbGenres).stream().map(Arguments::of);
         }
     }
 }

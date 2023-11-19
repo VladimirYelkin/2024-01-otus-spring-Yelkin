@@ -34,17 +34,15 @@ class AuthorRepositoryJdbcTest {
         assertThat(actualAuthor).isPresent()
                 .get()
                 .isEqualTo(expectedAuthor);
-        System.out.println(actualAuthor);
     }
 
     @DisplayName("должен загружать список всех aвторов")
     @Test
-    void shouldReturnCorrectBooksList() {
+    void shouldReturnCorrectAuthorList() {
         var actualAuthors = authorRepositoryJdbc.findAll();
         var expectedAuthors = getDbAuthors();
 
         assertThat(actualAuthors).containsExactlyElementsOf(expectedAuthors);
-        actualAuthors.forEach(System.out::println);
     }
 
     private static class CorrectParamsDBAuthor implements ArgumentsProvider {

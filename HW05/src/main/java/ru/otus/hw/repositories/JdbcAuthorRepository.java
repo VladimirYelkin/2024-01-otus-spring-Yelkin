@@ -31,8 +31,7 @@ public class JdbcAuthorRepository implements AuthorRepository {
         Map<String, Object> params = Collections.singletonMap("id", id);
         var authors = namedParameterJdbcOperations.query(
                 "select id, full_name from authors where id = :id", params, new AuthorRowMapper());
-
-        return authors.isEmpty() ? Optional.empty(): Optional.of(authors.get(0));
+        return authors.isEmpty() ? Optional.empty() : Optional.of(authors.get(0));
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {

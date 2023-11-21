@@ -55,7 +55,7 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        if (book.getId() == 0) {
+        if (book.getId() == null) {
             return insert(book);
         }
         return update(book);
@@ -64,8 +64,8 @@ public class BookRepositoryJdbc implements BookRepository {
     @Override
     public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        namedParameterJdbcOperations.update("delete from books where id  = :id", params);
         removeGenresRelationsForBookId(id);
+        namedParameterJdbcOperations.update("delete from books where id  = :id", params);
     }
 
     private List<Book> getAllBooksWithoutGenres() {
@@ -83,13 +83,12 @@ public class BookRepositoryJdbc implements BookRepository {
     private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres,
                                 List<BookGenreRelation> relations) {
         Map<Long, Genre> genreMap = genres.stream().collect(Collectors.toMap(Genre::getId, Function.identity()));
-        booksWithoutGenres.forEach(book -> {
-            var genresOfBook = relations.stream()
-                    .filter(bookGenreRelation -> bookGenreRelation.bookId == book.getId())
-                    .map(bookGenreRelation -> genreMap.get(bookGenreRelation.genreId))
-                    .toList();
-            book.setGenres(genresOfBook);
-        });
+        Map<Long, List<Genre>> relationsMap = relations.stream()
+                .collect(Collectors.groupingBy(
+                        BookGenreRelation::bookId,
+                        Collectors.mapping(bookGenreRel -> genreMap.get(bookGenreRel.genreId),Collectors.toList())));
+        booksWithoutGenres
+                .forEach(book -> book.setGenres(relationsMap.getOrDefault(book.getId(),Collections.emptyList())));
     }
 
     private Book insert(Book book) {

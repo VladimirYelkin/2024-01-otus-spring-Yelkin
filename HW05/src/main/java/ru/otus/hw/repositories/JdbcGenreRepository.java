@@ -12,11 +12,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class GenreRepositoryJdbc implements GenreRepository {
+public class JdbcGenreRepository implements GenreRepository {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public GenreRepositoryJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
+    public JdbcGenreRepository(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
 

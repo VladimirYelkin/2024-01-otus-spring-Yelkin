@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class AuthorRepositoryJdbc implements AuthorRepository {
+public class JdbcAuthorRepository implements AuthorRepository {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public AuthorRepositoryJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
+    public JdbcAuthorRepository(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
 

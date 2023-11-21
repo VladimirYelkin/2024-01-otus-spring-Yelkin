@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class BookRepositoryJdbc implements BookRepository {
+public class JdbcBookRepository implements BookRepository {
 
     private final GenreRepository genreRepository;
 

@@ -2,36 +2,29 @@ package ru.otus.hw.repositories;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @JdbcTest
-@Import({GenreRepositoryJdbc.class})
-class GenreRepositoryJdbcTest {
+@Import({JdbcGenreRepository.class})
+class JdbcGenreRepositoryTest {
 
     @Autowired
-    private GenreRepositoryJdbc genreRepositoryJdbc;
+    private JdbcGenreRepository jdbcGenreRepository;
 
     @DisplayName("должен загружать список все жанры")
     @Test
     void shouldReturnCorrectBooksList() {
-        var actualGenres = genreRepositoryJdbc.findAll();
+        var actualGenres = jdbcGenreRepository.findAll();
         var expectedGenres = getDbGenres();
 
         assertThat(actualGenres).containsExactlyElementsOf(expectedGenres);
@@ -41,7 +34,7 @@ class GenreRepositoryJdbcTest {
     @Test
     void shouldReturnCorrectGenreList() {
         List<Long> idx = List.of(1L, 3L);
-        var actualGenres = genreRepositoryJdbc.findAllByIds(idx);
+        var actualGenres = jdbcGenreRepository.findAllByIds(idx);
         var expectedGenres = getDbGenres().stream()
                 .filter(genre -> idx.contains(genre.getId()))
                 .collect(Collectors.toList());

@@ -1,6 +1,8 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
@@ -16,14 +18,22 @@ import java.util.Set;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
+
     private final AuthorRepository authorRepository;
 
     private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
+
+    public BookServiceImpl(@Qualifier("jpaAuthorRepository")
+                           AuthorRepository authorRepository, GenreRepository genreRepository, BookRepository bookRepository) {
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public Optional<Book> findById(long id) {

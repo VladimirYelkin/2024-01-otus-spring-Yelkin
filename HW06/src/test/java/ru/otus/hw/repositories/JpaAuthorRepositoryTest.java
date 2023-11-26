@@ -44,7 +44,6 @@ class JpaAuthorRepositoryTest {
 
     @DisplayName("должен загружать список всех aвторов")
     @Test
-    @RepeatedTest(value = 10)
     void shouldReturnCorrectAuthorList() {
         var actualAuthors = authorRepositoryJdbc.findAll();
         var expectedAuthors = getDbAuthors();

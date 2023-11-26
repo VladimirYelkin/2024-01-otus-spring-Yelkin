@@ -57,7 +57,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         List<Genre> genres = isEmpty(genresIds) ? Collections.emptyList()
                 : genreRepository.findAllByIds(List.copyOf(genresIds));
-        if (isEmpty(genres)) {
+        if (genres.size() != genresIds.size()) {
             throw new EntityNotFoundException("Genres with ids %s not found".formatted(genresIds));
         }
         var book = new Book(id, title, author, genres);

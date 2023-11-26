@@ -1,6 +1,6 @@
 package ru.otus.hw.repositories;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,22 +15,21 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository {
 
     private final GenreRepository genreRepository;
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
+    public JdbcBookRepository(@Qualifier("jpaGenreRepository") GenreRepository genreRepository, NamedParameterJdbcOperations namedParameterJdbcOperations) {
+        this.genreRepository = genreRepository;
+        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
+    }
 
     @Override
     public Optional<Book> findById(long id) {
@@ -86,9 +85,9 @@ public class JdbcBookRepository implements BookRepository {
         Map<Long, List<Genre>> relationsMap = relations.stream()
                 .collect(Collectors.groupingBy(
                         BookGenreRelation::bookId,
-                        Collectors.mapping(bookGenreRel -> genreMap.get(bookGenreRel.genreId),Collectors.toList())));
+                        Collectors.mapping(bookGenreRel -> genreMap.get(bookGenreRel.genreId), Collectors.toList())));
         booksWithoutGenres
-                .forEach(book -> book.setGenres(relationsMap.getOrDefault(book.getId(),Collections.emptyList())));
+                .forEach(book -> book.setGenres(relationsMap.getOrDefault(book.getId(), Collections.emptyList())));
     }
 
     private Book insert(Book book) {
@@ -159,8 +158,10 @@ public class JdbcBookRepository implements BookRepository {
 
 
     @SuppressWarnings("ClassCanBeRecord")
-    @RequiredArgsConstructor
     private static class BookResultSetExtractor implements ResultSetExtractor<Optional<Book>> {
+
+        public BookResultSetExtractor() {
+        }
 
         @Override
         public Optional<Book> extractData(ResultSet rs) throws SQLException, DataAccessException {

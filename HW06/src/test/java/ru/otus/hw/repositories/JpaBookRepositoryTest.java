@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -23,9 +24,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
+@DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
-@Import({JpaBookRepository.class})
+@Import({JpaBookRepository.class, JpaGenreRepository.class, JpaAuthorRepository.class})
 class JpaBookRepositoryTest {
 
     @Autowired
@@ -33,6 +34,12 @@ class JpaBookRepositoryTest {
 
     @Autowired
     private JpaBookRepository jpaBookRepository;
+
+    @Autowired
+    JpaGenreRepository jpaGenreRepository;
+
+    @Autowired
+    JpaAuthorRepository jpaAuthorRepository;
 
     private List<Author> dbAuthors;
 
@@ -51,6 +58,7 @@ class JpaBookRepositoryTest {
     @ParameterizedTest
     @ArgumentsSource(DbBooksExpected.class)
     void shouldReturnCorrectBookById(Book expectedBook) {
+
         var actualBook = jpaBookRepository.findById(expectedBook.getId());
         assertThat(actualBook).isPresent()
                 .get()
@@ -73,14 +81,15 @@ class JpaBookRepositoryTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var expectedBook = new Book(null, "BookTitle_10500", dbAuthors.get(0),
-                List.of(dbGenres.get(0), dbGenres.get(2)));
+
+        var expectedBook = new Book(null, "Book_Title_NEW", jpaAuthorRepository.findById(3).get(),
+                jpaGenreRepository.findAllByIds(List.of(1L, 2L)));
         var returnedBook = jpaBookRepository.save(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
         var expectB = testEm.find(Book.class, returnedBook.getId());
-        assertThat(expectB).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);;
+        assertThat(expectB).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
     }
 
     @DisplayName("должен сохранять измененную книгу")

@@ -1,7 +1,8 @@
 MERGE INTO AUTHORS A
     USING (VALUES ('Author_1'),
                   ('Author_2'),
-                  ('Author_3')) S(V)
+                  ('Author_3'),
+                  ('Author_4')) S(V)
 ON A.FULL_NAME = S.V
 WHEN NOT MATCHED THEN INSERT (FULL_NAME) VALUES (S.V);
 

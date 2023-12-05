@@ -19,7 +19,7 @@ import java.util.Set;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -29,19 +29,13 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    public BookServiceImpl(@Qualifier("jpaAuthorRepository")
-                           AuthorRepository authorRepository, @Qualifier("jpaGenreRepository") GenreRepository genreRepository, @Qualifier("jpaBookRepository") BookRepository bookRepository) {
-        this.authorRepository = authorRepository;
-        this.genreRepository = genreRepository;
-        this.bookRepository = bookRepository;
-    }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<Book> findById(long id) {
         return bookRepository.findById(id)
                 .map(book ->
-                new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres().stream().toList()));
+                        new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres().stream().toList()));
     }
 
     @Override

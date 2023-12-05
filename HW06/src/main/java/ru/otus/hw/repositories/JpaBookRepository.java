@@ -47,26 +47,14 @@ public class JpaBookRepository implements BookRepository {
         return query.getResultList();
     }
 
-    private Book update(Book book) {
-        return em.merge(book);
-    }
-
-
-    private Book insert(Book book) {
-        em.persist(book);
-        return book;
-    }
 
     @Override
     public Book save(Book book) {
         if (book.getId() == null) {
-            return insert(book);
+            em.persist(book);
+            return book;
         }
-        return update(book);
-    }
-
-    public void flush () {
-        em.flush();
+        return em.merge(book);
     }
 
     @Override

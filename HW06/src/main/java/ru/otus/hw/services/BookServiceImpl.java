@@ -34,7 +34,8 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> findById(long id) {
         return bookRepository.findById(id)
                 .map(book ->
-                        new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres().stream().collect(Collectors.toSet())));
+                        new Book(book.getId(), book.getTitle(), book.getAuthor(),
+                                book.getGenres().stream().collect(Collectors.toSet())));
     }
 
     @Override
@@ -54,7 +55,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book update(long id, String title, long authorId, List<Long> genresIds) {
         return bookRepository.findById(id)
-                .map(book -> {return save(book.getId(), title, authorId, Set.copyOf(genresIds));})
+                .map(book -> save(book.getId(), title, authorId, Set.copyOf(genresIds)))
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
     }
 

@@ -19,6 +19,7 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
-@Import({JpaBookRepository.class, JpaGenreRepository.class, JpaAuthorRepository.class})
+@Import({JpaBookRepository.class, JpaGenreRepository.class})
 class JpaBookRepositoryTest {
 
     @Autowired
@@ -34,12 +35,6 @@ class JpaBookRepositoryTest {
 
     @Autowired
     private JpaBookRepository jpaBookRepository;
-
-    @Autowired
-    JpaGenreRepository jpaGenreRepository;
-
-    @Autowired
-    JpaAuthorRepository jpaAuthorRepository;
 
     private List<Author> dbAuthors;
 
@@ -82,8 +77,8 @@ class JpaBookRepositoryTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var expectedBook = new Book(null, "Book_Title_NEW", jpaAuthorRepository.findById(3).get(),
-                jpaGenreRepository.findAllByIds(List.of(1L, 2L)));
+        var expectedBook = new Book(null, "Book_Title_NEW", testEm.find(Author.class, 3L),
+                Set.of(testEm.find(Genre.class, 1L), testEm.find(Genre.class, 2L)));
 
         var returnedBook = jpaBookRepository.save(expectedBook);
 
@@ -98,7 +93,7 @@ class JpaBookRepositoryTest {
     @Test
     void shouldSaveUpdatedBook() {
         var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2),
-                List.of(dbGenres.get(4), dbGenres.get(5)));
+                Set.of(dbGenres.get(4), dbGenres.get(5)));
 
         assertThat(jpaBookRepository.findById(expectedBook.getId()))
                 .isPresent()
@@ -143,7 +138,7 @@ class JpaBookRepositoryTest {
                 .map(id -> new Book(Long.valueOf(id),
                         "BookTitle_" + id,
                         dbAuthors.get(id - 1),
-                        dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2)
+                        Set.copyOf(dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2))
                 ))
                 .toList();
     }

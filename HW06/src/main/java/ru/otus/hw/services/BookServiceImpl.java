@@ -1,8 +1,6 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -16,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -35,7 +34,7 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> findById(long id) {
         return bookRepository.findById(id)
                 .map(book ->
-                        new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres().stream().toList()));
+                        new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres().stream().collect(Collectors.toSet())));
     }
 
     @Override
@@ -54,9 +53,9 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book update(long id, String title, long authorId, List<Long> genresIds) {
-        bookRepository.findById(id)
+        return bookRepository.findById(id)
+                .map(book -> {return save(book.getId(), title, authorId, Set.copyOf(genresIds));})
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
-        return save(id, title, authorId, Set.copyOf(genresIds));
     }
 
     @Override
@@ -68,8 +67,8 @@ public class BookServiceImpl implements BookService {
     private Book save(long id, String title, long authorId, Set<Long> genresIds) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        List<Genre> genres = isEmpty(genresIds) ? Collections.emptyList()
-                : genreRepository.findAllByIds(List.copyOf(genresIds));
+        Set<Genre> genres = isEmpty(genresIds) ? Collections.emptySet()
+                : Set.copyOf(genreRepository.findAllByIds(List.copyOf(genresIds)));
         if (isEmpty(genres)) {
             throw new EntityNotFoundException("Genres with ids %s not found".formatted(genresIds));
         }

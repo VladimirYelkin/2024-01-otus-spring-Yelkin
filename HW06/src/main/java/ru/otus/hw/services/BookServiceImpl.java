@@ -50,7 +50,6 @@ public class BookServiceImpl implements BookService {
         return save(0, title, authorId, Set.copyOf(genresIds));
     }
 
-
     @Transactional
     @Override
     public Book update(long id, String title, long authorId, List<Long> genresIds) {

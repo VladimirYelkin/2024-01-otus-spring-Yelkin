@@ -29,9 +29,16 @@ MERGE INTO BOOKS_GENRES BG
     ON (BG.BOOK_ID=S.BOOK_ID AND BG.GENRE_ID=S.GENRE_ID)
     WHEN NOT MATCHED THEN INSERT (BOOK_ID,GENRE_ID) VALUES (S.BOOK_ID,S.GENRE_ID);
 
-MERGE INTO COMMENTS C
-    USING (VALUES ('BookComment_1_1', 1),
-                  ('BookComment_1_2', 1),
-                  ('BookComment_2_1', 2)) S(V,BOOK_ID)
-ON C.FULL_TEXT = S.V
-WHEN NOT MATCHED THEN INSERT (FULL_TEXT,BOOK_ID) VALUES (S.V,S.BOOK_ID);
+MERGE INTO COMMENTS CM
+    USING (values ('Comment1_ForBook1', 1),
+                  ('Comment2_ForBook1', 1),
+                  ('Comment1_ForBook2', 2),
+                  ('Comment2_ForBook2', 2),
+                  ('Comment1_ForBook3', 3),
+                  ('Comment2_ForBook3', 3)) S (COMMENT, BOOK_ID)
+ON (CM.FULL_TEXT = S.COMMENT AND CM.BOOK_ID = S.BOOK_ID)
+WHEN NOT MATCHED THEN
+    INSERT (BOOK_ID, FULL_TEXT)
+    VALUES (S.BOOK_ID, S.COMMENT);
+
+

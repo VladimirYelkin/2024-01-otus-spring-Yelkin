@@ -3,12 +3,12 @@ package ru.otus.hw.repositories;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
@@ -23,20 +23,37 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public Optional<Comment> findByBookId(long id) {
-        return Optional.empty();
+    public List<Comment> findByBook(Book book) {
+        if (book.getId() != null) {
+            return findByBook(book.getId());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Comment> findByBook(long bookId) {
+        TypedQuery<Comment> query = em.createQuery("select c from Comment c where c.book.id = :bookId ", Comment.class);
+        query.setParameter("bookId", bookId);
+        return query.getResultList();
+    }
+
+    public Comment save(Comment comment) {
+        if (Objects.isNull(comment.getId())) {
+            em.persist(comment);
+            return comment;
+        }
+        return em.merge(comment);
     }
 
     @Override
     public void deleteById(long id) {
-        em.remove(findById(id).get());
+        findById(id).ifPresent(em::remove);
     }
 
     @Override
     public Optional<Comment> findById(long id) {
         EntityGraph<?> graph = em.getEntityGraph("comment-with-book");
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(FETCH.getKey(), graph);
+        Map<String, Object> properties = Map.of(FETCH.getKey(), graph);
         return Optional.ofNullable(em.find(Comment.class, id, properties));
     }
 }

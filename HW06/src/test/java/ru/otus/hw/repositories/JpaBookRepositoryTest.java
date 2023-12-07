@@ -69,8 +69,9 @@ class JpaBookRepositoryTest {
     @DisplayName("должен загружать список всех книг")
     @Test
     void shouldReturnCorrectBooksList() {
-        var actualBooks = jpaBookRepository.findAll();
         var expectedBooks = dbBooks;
+
+        var actualBooks = jpaBookRepository.findAll();
 
         assertThat(actualBooks.get(0)).usingRecursiveComparison().isEqualTo(expectedBooks.get(0));
         assertThat(actualBooks.get(1)).usingRecursiveComparison().isEqualTo(expectedBooks.get(1));
@@ -81,10 +82,11 @@ class JpaBookRepositoryTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-
         var expectedBook = new Book(null, "Book_Title_NEW", jpaAuthorRepository.findById(3).get(),
                 jpaGenreRepository.findAllByIds(List.of(1L, 2L)));
+
         var returnedBook = jpaBookRepository.save(expectedBook);
+
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
@@ -118,7 +120,9 @@ class JpaBookRepositoryTest {
     @Test
     void shouldDeleteBook() {
         assertThat(jpaBookRepository.findById(1L)).isPresent();
+
         jpaBookRepository.deleteById(1L);
+
         assertThat(jpaBookRepository.findById(1L)).isEmpty();
     }
 

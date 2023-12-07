@@ -1,14 +1,13 @@
 package ru.otus.hw.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-@NamedEntityGraph(name = "comment-with-book", attributeNodes = {@NamedAttributeNode("book")})
-@Data
-@ToString(exclude = {"book"})
+@NamedEntityGraph(name = "comment-with-book",
+        attributeNodes = {@NamedAttributeNode(value = "book", subgraph = "book-sub")},
+        subgraphs = @NamedSubgraph(name = "book-sub", attributeNodes = {@NamedAttributeNode("author")}))
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -17,7 +16,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "full_text", nullable = false)
     private String fullText;

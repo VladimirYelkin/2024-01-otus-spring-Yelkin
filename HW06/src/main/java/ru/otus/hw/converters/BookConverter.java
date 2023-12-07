@@ -24,4 +24,13 @@ public class BookConverter {
                 authorConverter.authorToString(book.getAuthor()),
                 genresString);
     }
+
+    public String bookWithOutGanresToString(Book book) {
+//        var genresString = book.getGenres().stream()
+//                .map(genreConverter::genreToString)
+//                .map("{%s}"::formatted)
+//                .collect(Collectors.joining(", "));
+        return "Id: %d, title: %s, author: {%s}".formatted(book.getId(), book.getTitle(),
+                authorConverter.authorToString(book.getAuthor()));
+    }
 }

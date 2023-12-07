@@ -36,7 +36,9 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(em.find(Book.class, id));
+        EntityGraph<?> graph = em.getEntityGraph("book-graph");
+        Map<String, Object> properties = Map.of(FETCH.getKey(), graph);
+        return Optional.ofNullable(em.find(Book.class, id, properties));
     }
 
     @Override

@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id)
                 .map(book ->
                         new BookDto(book.getId(), book.getTitle(), book.getAuthor(),
-                                book.getGenres().stream().collect(Collectors.toSet())));
+                                new HashSet<>(book.getGenres())));
     }
 
     @Override

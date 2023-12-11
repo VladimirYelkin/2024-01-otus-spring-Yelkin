@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -11,6 +12,7 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -28,30 +30,37 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<BookDto> findById(long id) {
         return bookRepository.findById(id)
                 .map(book ->
-                        new Book(book.getId(), book.getTitle(), book.getAuthor(),
+                        new BookDto(book.getId(), book.getTitle(), book.getAuthor(),
                                 book.getGenres().stream().collect(Collectors.toSet())));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<BookDto> findAll() {
+        var ganres = genreRepository.findAll().stream().collect(Collectors.toMap(Genre::getId, Function.identity()));
+        return bookRepository.findAll().stream()
+                .map(book -> new BookDto(book.getId(), book.getTitle(), book.getAuthor(),
+                        book.getGenres().stream()
+                                .map(genre -> ganres.get(genre.getId())).collect(Collectors.toSet())))
+                .toList();
     }
 
     @Transactional
     @Override
-    public Book insert(String title, long authorId, Collection<Long> genresIds) {
-        return save(0, title, authorId, (genresIds));
+    public BookDto insert(String title, long authorId, Collection<Long> genresIds) {
+        var book = save(0, title, authorId, genresIds);
+        return new BookDto(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres());
     }
 
     @Transactional
     @Override
-    public Book update(long id, String title, long authorId, Collection<Long> genresIds) {
+    public BookDto update(long id, String title, long authorId, Collection<Long> genresIds) {
         return bookRepository.findById(id)
                 .map(book -> save(book.getId(), title, authorId, (genresIds)))
+                .map(book -> new BookDto(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres()))
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
     }
 

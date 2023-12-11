@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,15 @@ public class JpaBookRepository implements BookRepository {
     }
 
     @Override
+    public Optional<Book> findByIdWithoutGenres(long id) {
+        EntityGraph<?> graph = em.getEntityGraph("book-graph-without-genres");
+        Map<String, Object> properties = Map.of(FETCH.getKey(), graph);
+        return Optional.ofNullable(em.find(Book.class, id, properties));
+    }
+
+    @Override
     public List<Book> findAll() {
-        EntityGraph<?> eg = em.getEntityGraph("book-graph");
+        EntityGraph<?> eg = em.getEntityGraph("book-graph-without-genres");
         TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
         query.setHint(FETCH.getKey(), eg);
         return query.getResultList();

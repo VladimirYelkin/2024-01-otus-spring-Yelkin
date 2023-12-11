@@ -17,7 +17,7 @@ public class CommentConverter {
                 bookConverter.bookWithOutGanresToString(comment.getBook()));
     }
 
-    public String commentWithoutBookOfoToString(Comment comment) {
+    public String commentWithoutBookInfoToString(Comment comment) {
         return "Id: %d, text: %s".formatted(
                 comment.getId(),
                 comment.getFullText());

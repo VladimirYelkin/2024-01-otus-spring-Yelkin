@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import ru.otus.hw.models.Book;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,9 +11,9 @@ public interface BookService {
 
     List<Book> findAll();
 
-    Book insert(String title, long authorId, List<Long> genresIds);
+    Book insert(String title, long authorId, Collection<Long> genresIds);
 
-    Book update(long id, String title, long authorId, List<Long> genresIds);
+    Book update(long id, String title, long authorId, Collection<Long> genresIds);
 
     void deleteById(long id);
 }

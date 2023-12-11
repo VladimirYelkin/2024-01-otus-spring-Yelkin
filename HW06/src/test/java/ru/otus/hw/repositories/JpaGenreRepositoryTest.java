@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,9 +44,9 @@ class JpaGenreRepositoryTest {
     }
 
 
-    private static List<Genre> getDbGenres() {
+    private static Set<Genre> getDbGenres() {
         return IntStream.range(1, 7).boxed()
                 .map(id -> new Genre(id, "Genre_" + id))
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

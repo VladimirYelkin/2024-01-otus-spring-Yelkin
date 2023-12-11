@@ -10,10 +10,7 @@ import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -46,15 +43,15 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book insert(String title, long authorId, List<Long> genresIds) {
-        return save(0, title, authorId, Set.copyOf(genresIds));
+    public Book insert(String title, long authorId, Collection<Long> genresIds) {
+        return save(0, title, authorId, (genresIds));
     }
 
     @Transactional
     @Override
-    public Book update(long id, String title, long authorId, List<Long> genresIds) {
+    public Book update(long id, String title, long authorId, Collection<Long> genresIds) {
         return bookRepository.findById(id)
-                .map(book -> save(book.getId(), title, authorId, Set.copyOf(genresIds)))
+                .map(book -> save(book.getId(), title, authorId, (genresIds)))
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
     }
 
@@ -64,11 +61,11 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, Set<Long> genresIds) {
+    private Book save(long id, String title, long authorId, Collection<Long> genresIds) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         Set<Genre> genres = isEmpty(genresIds) ? Collections.emptySet()
-                : Set.copyOf(genreRepository.findAllByIds(List.copyOf(genresIds)));
+                : genreRepository.findAllByIds(genresIds);
         if (genres.size() != genresIds.size()) {
             throw new EntityNotFoundException("Genres with ids %s not found".formatted(genresIds));
         }

@@ -68,7 +68,7 @@ class JpaCommentRepositoryTest {
         query.setParameter("bookId", bookId);
         var expectedComments = query.getResultList();
 
-        var actualComments = jpaCommentRepository.findByBook(bookId);
+        var actualComments = jpaCommentRepository.findByBookId(bookId);
 
         assertThat(actualComments).containsExactlyElementsOf(expectedComments);
     }

@@ -38,7 +38,7 @@ public class JpaAuthorRepository implements AuthorRepository {
 
     @Override
     public void deleteById(long id) {
-        em.remove(findById(id).get());
+        Optional.ofNullable(em.find(Author.class,id)).ifPresent(em::remove);
     }
 
 }

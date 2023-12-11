@@ -48,7 +48,6 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Book book = findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
-        em.remove(book);
+        Optional.ofNullable(em.find(Book.class, id)).ifPresent(em::remove);
     }
 }

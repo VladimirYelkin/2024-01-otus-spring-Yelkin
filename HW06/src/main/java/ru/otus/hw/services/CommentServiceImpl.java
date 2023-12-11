@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<Comment> findAllByBook(long bookId) {
         var book = getBook(bookId);
-        return commentRepository.findByBook(book);
+        return commentRepository.findByBookId(bookId);
     }
 
     @Override

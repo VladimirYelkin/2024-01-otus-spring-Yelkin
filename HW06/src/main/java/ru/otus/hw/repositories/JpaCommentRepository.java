@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +27,7 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findByBook(Book book) {
-        if (book.getId() != null) {
-            return findByBook(book.getId());
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<Comment> findByBook(long bookId) {
+    public List<Comment> findByBookId(long bookId) {
         TypedQuery<Comment> query = em.createQuery("select c from Comment c where c.book.id = :bookId ", Comment.class);
         query.setParameter("bookId", bookId);
         return query.getResultList();
@@ -50,7 +43,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public void deleteById(long id) {
-        findById(id).ifPresent(em::remove);
+        Optional.ofNullable(em.find(Comment.class, id)).ifPresent(em::remove);
     }
 
     @Override

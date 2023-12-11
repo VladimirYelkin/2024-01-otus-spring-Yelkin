@@ -16,4 +16,10 @@ public class CommentConverter {
                 comment.getFullText(),
                 bookConverter.bookWithOutGanresToString(comment.getBook()));
     }
+
+    public String commentWithoutBookOfoToString(Comment comment) {
+        return "Id: %d, text: %s".formatted(
+                comment.getId(),
+                comment.getFullText());
+    }
 }

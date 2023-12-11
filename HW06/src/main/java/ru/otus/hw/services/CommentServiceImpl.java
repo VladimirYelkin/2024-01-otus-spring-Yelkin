@@ -23,7 +23,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Comment> findById(long id) {
-        return commentRepository.findById(id);
+        return commentRepository.findWithBookById(id);
     }
 
     @Override
@@ -42,10 +42,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment update(long id, String comment) {
-        return commentRepository.findById(id)
+        return commentRepository.findWithBookById(id)
                 .map(commentUpdated -> {
                     commentUpdated.setFullText(comment);
-                    return commentUpdated;
+                    return commentRepository.save(commentUpdated);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("comment with id %d not found".formatted(id)));
     }

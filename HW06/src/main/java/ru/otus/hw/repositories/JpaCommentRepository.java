@@ -5,10 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,6 +46,11 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public Optional<Comment> findById(long id) {
+        return Optional.ofNullable(em.find(Comment.class, id));
+    }
+
+    @Override
+    public Optional<Comment> findWithBookById(long id) {
         EntityGraph<?> graph = em.getEntityGraph("comment-with-book");
         Map<String, Object> properties = Map.of(FETCH.getKey(), graph);
         return Optional.ofNullable(em.find(Comment.class, id, properties));

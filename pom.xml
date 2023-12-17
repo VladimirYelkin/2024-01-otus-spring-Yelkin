@@ -32,7 +32,7 @@
         <aspectj.version>1.9.19</aspectj.version>
         <maven.shade.plugin.version>3.5.1</maven.shade.plugin.version>
         <opencsv.version>5.8</opencsv.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
         <minimal.maven.version>3.3.9</minimal.maven.version>
         <spring.boot.starter.version>3.1.4</spring.boot.starter.version>
@@ -144,7 +144,8 @@
 <!--        <module>HW02</module>-->
 <!--        <module>HW03</module>-->
 <!--        <module>HW04</module>-->
-        <module>HW05</module>
+<!--        <module>HW05</module>-->
+        <module>HW06</module>
     </modules>
     <build>
         <plugins>

@@ -8,6 +8,7 @@ import ru.otus.hw.services.BookService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,14 +36,14 @@ public class BookCommands {
     //bins aaaaaaaaaaaaa 1 1,6//bins aaaaaaaaaaaaa 1 1,6
     @ShellMethod(value = "Insert book", key = "bins")
     public String insertBook(String title, long authorId, List<Long> genresIds) {
-        var savedBook = bookService.insert(title, authorId, genresIds);
+        var savedBook = bookService.insert(title, authorId, Set.copyOf(genresIds));
         return bookConverter.bookDtoToString(savedBook);
     }
 
     //bupd 4 dfasdfasdfasd 3 2,5
     @ShellMethod(value = "Update book", key = "bupd")
     public String updateBook(long id, String title, long authorId, Collection<Long> genresIds) {
-        var savedBook = bookService.update(id, title, authorId, genresIds);
+        var savedBook = bookService.update(id, title, authorId, Set.copyOf(genresIds));
         return bookConverter.bookDtoToString(savedBook);
     }
 

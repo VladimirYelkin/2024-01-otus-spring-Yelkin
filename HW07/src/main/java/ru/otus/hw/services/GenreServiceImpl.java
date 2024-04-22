@@ -17,6 +17,6 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     @Override
     public Set<Genre> findAll() {
-        return genreRepository.findAll();
+        return Set.copyOf(genreRepository.findAll());
     }
 }

@@ -11,7 +11,6 @@ import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -55,16 +54,16 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto insert(String title, long authorId, Collection<Long> genresIds) {
-        var book = save(0, title, authorId, genresIds);
+    public BookDto insert(String title, long authorId, Set<Long> genreIds) {
+        var book = save(0, title, authorId, genreIds);
         return new BookDto(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres());
     }
 
     @Transactional
     @Override
-    public BookDto update(long id, String title, long authorId, Collection<Long> genresIds) {
+    public BookDto update(long id, String title, long authorId, Set<Long> genresIds) {
         return bookRepository.findById(id)
-                .map(book -> save(book.getId(), title, authorId, (genresIds)))
+                .map(book -> save(book.getId(), title, authorId, genresIds))
                 .map(book -> new BookDto(book.getId(), book.getTitle(), book.getAuthor(), book.getGenres()))
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
     }
@@ -75,13 +74,13 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, Collection<Long> genresIds) {
+    private Book save(long id, String title, long authorId, Set<Long> genreIds) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        Set<Genre> genres = isEmpty(genresIds) ? Collections.emptySet()
-                : genreRepository.findAllByIds(genresIds);
-        if (genres.size() != genresIds.size()) {
-            throw new EntityNotFoundException("Genres with ids %s not found".formatted(genresIds));
+        Set<Genre> genres = isEmpty(genreIds) ? Collections.emptySet()
+                : Set.copyOf(genreRepository.findAllById(genreIds));
+        if (genres.size() != genreIds.size()) {
+            throw new EntityNotFoundException("Genres with ids %s not found".formatted(genreIds));
         }
         var book = new Book(id, title, author, genres);
         return bookRepository.save(book);

@@ -1,3 +1,7 @@
+--liquibase formatted sql
+
+--changeset VLadimirYelkin:2024-05-01
+
 MERGE INTO AUTHORS A
     USING (VALUES ('Author_1'),
                   ('Author_2'),

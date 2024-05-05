@@ -28,8 +28,8 @@ public class CommentCommands {
     @ShellMethod(value = "Find comment by id", key = "cbid")
     public String findCommentById(long id) {
         return commentService.findById(id)
-                .map(commentConverter::commentToString)
-                .orElse("Book with id %d not found".formatted(id));
+                .map(commentConverter::commentWithoutBookInfoToString)
+                .orElse("Comment with id %d not found".formatted(id));
     }
 
     //cins 2 comment_text
@@ -43,7 +43,7 @@ public class CommentCommands {
     @ShellMethod(value = "Update comment by id: cubid <idOfComment> <textofComment>", key = "cubid")
     public String updateComment(long id, String commentText) {
         var savedComment = commentService.update(id, commentText);
-        return commentConverter.commentToString(savedComment);
+        return commentConverter.commentWithoutBookInfoToString(savedComment);
     }
 
     //cdebid 2

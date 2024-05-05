@@ -2,9 +2,7 @@ package ru.otus.hw.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.models.Book;
 
 import java.util.stream.Collectors;
 
@@ -33,8 +31,4 @@ public class BookConverter {
                 authorConverter.authorToString(book.author()));
     }
 
-    public String bookWithOutGanresToString(Book book) {
-        return "Id: %d, title: %s, author: {%s}".formatted(book.getId(), book.getTitle(),
-                authorConverter.authorToString(new AuthorDto(book.getAuthor())));
-    }
 }

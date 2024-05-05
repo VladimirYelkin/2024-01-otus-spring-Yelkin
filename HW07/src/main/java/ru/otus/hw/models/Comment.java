@@ -8,18 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NamedEntityGraph(name = "comment-with-book",
-        attributeNodes = {@NamedAttributeNode(value = "book", subgraph = "book-sub")},
-        subgraphs = @NamedSubgraph(name = "book-sub", attributeNodes = {@NamedAttributeNode("author")}))
 @Getter
 @Setter
 @AllArgsConstructor

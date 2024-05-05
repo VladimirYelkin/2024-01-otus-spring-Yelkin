@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -45,12 +43,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<BookDto> findAll() {
-        var genres = genreRepository.findAll().stream().collect(Collectors.toMap(Genre::getId, Function.identity()));
         return bookRepository.findAll().stream()
                 .map(book -> new BookDto(book.getId(), book.getTitle(), new AuthorDto(book.getAuthor()),
                         book.getGenres().stream()
-                                .map(genre -> genres.get(genre.getId()))
-                                .map(GenreDto::new).toList()))
+                                .map(GenreDto::new)
+                                .toList()))
                 .toList();
     }
 

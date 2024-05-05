@@ -92,18 +92,4 @@ class JpaCommentRepositoryTest {
 
         assertThat(actualComments).containsExactlyElementsOf(expectedComments);
     }
-
-    @DisplayName(" должен загружать комментарий по Id ")
-    @ParameterizedTest
-    @ValueSource(longs = {1L, 2L, 3L, 4L ,5L , 6L})
-    void shouldReturnCorrectCommentById(long id) {
-
-        var actualComment = commentRepository.findWithBookById(id);
-
-        assertThat(actualComment).isPresent();
-        assertThat(actualComment.get().getBook().getId()).isNotNull();
-        assertThat(actualComment.get().getBook().getTitle()).isNotNull();
-        assertThat(actualComment.get().getBook().getAuthor()).isNotNull();
-    }
-
 }

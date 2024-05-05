@@ -1,9 +1,6 @@
 package ru.otus.hw.dto;
 
-import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Genre;
+import java.util.List;
 
-import java.util.Set;
-
-public record BookDto(Long id, String title, Author author, Set<Genre> genres) {
+public record BookDto(Long id, String title, AuthorDto author, List<GenreDto> genres) {
 }

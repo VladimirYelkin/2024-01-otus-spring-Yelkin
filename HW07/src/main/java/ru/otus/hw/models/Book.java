@@ -20,7 +20,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import java.util.Set;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -48,6 +49,6 @@ public class Book {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private Set<Genre> genres;
+    private List<Genre> genres;
 
 }

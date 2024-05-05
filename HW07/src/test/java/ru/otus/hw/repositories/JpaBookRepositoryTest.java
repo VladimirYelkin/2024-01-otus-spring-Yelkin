@@ -81,8 +81,7 @@ class JpaBookRepositoryTest {
     void shouldSaveNewBook() {
         var author = authorRepository.findById(3L).orElseThrow();
         var genres = genreRepository.findAllById(Set.of(1L, 2L));
-        var expectedBook = new Book(null, "Book_Title_NEW", author,
-                Set.copyOf(genres));
+        var expectedBook = new Book(null, "Book_Title_NEW", author, genres);
 
         var returnedBook = bookRepository.save(expectedBook);
 
@@ -99,7 +98,7 @@ class JpaBookRepositoryTest {
     void shouldSaveNewBookWithNewAuthorAndNewGenre() {
         var author = new Author(0, "New Author");
         var genre = new Genre(0, "New GENRE");
-        var book = new Book(null, " NEW BOOK", author, Set.of(genre));
+        var book = new Book(null, " NEW BOOK", author, List.of(genre));
 
         var actualSavedBook = bookRepository.save(book);
 
@@ -107,13 +106,13 @@ class JpaBookRepositoryTest {
         assertThat(bookRepository.findById(actualSavedBook.getId())).isPresent();
         assertThat(authorRepository.findById(actualSavedBook.getAuthor().getId())).isPresent();
         assertThat(genreRepository.findById(actualSavedBook.getGenres().stream().findFirst().orElseThrow().getId())).isPresent();
-     }
+    }
 
     @DisplayName("должен сохранять измененную книгу")
     @Test
     void shouldSaveUpdatedBook() {
         var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2),
-                Set.of(dbGenres.get(4), dbGenres.get(5)));
+                List.of(dbGenres.get(4), dbGenres.get(5)));
 
         assertThat(bookRepository.findById(expectedBook.getId()))
                 .isPresent()
@@ -130,7 +129,6 @@ class JpaBookRepositoryTest {
                 .get()
                 .isEqualTo(returnedBook);
     }
-
 
 
     private static List<Author> getDbAuthors() {
@@ -150,14 +148,14 @@ class JpaBookRepositoryTest {
                 .map(id -> new Book(Long.valueOf(id),
                         "BookTitle_" + id,
                         dbAuthors.get(id - 1),
-                        Set.copyOf(dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2))
+                        List.copyOf(dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2))
                 ))
                 .toList();
     }
 
     private static class DbBooksExpected implements ArgumentsProvider {
         @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext)  {
+        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
             var dbAuthors = getDbAuthors();
             var dbGenres = getDbGenres();
             return getDbBooks(dbAuthors, dbGenres).stream().map(Arguments::of);

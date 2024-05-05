@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment update(long id, String comment) {
-        return commentRepository.findWithBookById(id)
+        return commentRepository.findById(id)
                 .map(commentUpdated -> {
                     commentUpdated.setFullText(comment);
                     return commentRepository.save(commentUpdated);

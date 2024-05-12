@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/2024/05/01-01-schema.sql
+  - include:
+      context: "application"
+      file: db/changelog/2024/05/01-02-data.sql

@@ -145,7 +145,8 @@
 <!--        <module>HW03</module>-->
 <!--        <module>HW04</module>-->
 <!--        <module>HW05</module>-->
-        <module>HW06</module>
+<!--        <module>HW06</module>-->
+        <module>HW07</module>
     </modules>
     <build>
         <plugins>

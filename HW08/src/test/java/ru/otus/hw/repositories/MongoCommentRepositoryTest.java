@@ -1,45 +1,29 @@
 package ru.otus.hw.repositories;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.BookServiceImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Mongo для работы с комментариями")
 @DataMongoTest
-@Import({BookServiceImpl.class})
 @DirtiesContext
-class MongoCommentRepositoryTest  {
+class MongoCommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
 
     @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private BookService bookService;
-
-    @Autowired
     private MongoTemplate mongoTemplate;
-
-    @BeforeEach
-    void reInitialDB () {
-//        super.mongockBeforeEach();
-    }
 
     @DisplayName(" должен загружать информацию о нужном комментарии по его id")
     @ParameterizedTest
@@ -67,17 +51,6 @@ class MongoCommentRepositoryTest  {
         assertThat(commentRepository.findById(id)).isEmpty();
     }
 
-    @DisplayName(" должен удалять комментарии вместе с книгой")
-    @ParameterizedTest
-    @ValueSource(strings = {"1", "2", "3"})
-    void shouldDeleteCommentsByBookId(String id) {
-        assertThat(commentRepository.findByBookId(id)).isNotEmpty();
-
-        bookService.deleteById(id);
-
-        assertThat(commentRepository.findByBookId(id)).isEmpty();
-    }
-
     @DisplayName(" должен сохранять новый комментарий для книги ")
     @ParameterizedTest
     @ValueSource(strings = {"1", "2", "3"})
@@ -90,7 +63,7 @@ class MongoCommentRepositoryTest  {
         assertThat(returnedComment).isNotNull()
                 .matches(comment -> comment.getId() != null)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
-        assertThat(mongoTemplate.findById(returnedComment.getId(),Comment.class))
-                .usingRecursiveComparison().isEqualTo(returnedComment);
+        assertThat(mongoTemplate.findById(returnedComment.getId(), Comment.class))
+                .usingRecursiveComparison().ignoringFields("book").isEqualTo(returnedComment);
     }
 }

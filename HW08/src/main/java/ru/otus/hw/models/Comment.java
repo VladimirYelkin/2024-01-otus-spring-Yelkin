@@ -21,7 +21,7 @@ public class Comment {
 
     private String fullText;
 
-    @DBRef
+    @DBRef(lazy = true)
     private Book book;
 
     public Comment(String text, Book book) {

@@ -8,12 +8,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.repositories.events.CommentDeleteByBookDeleteEvent;
 
 import java.util.List;
 import java.util.Set;
@@ -22,12 +25,16 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import({CommentDeleteByBookDeleteEvent.class})
 @DisplayName("Репозиторий на основе Mongo для работы с книгами ")
 @DataMongoTest
 class MongoBookRepositoryTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private AuthorRepository authorRepository;
@@ -106,6 +113,7 @@ class MongoBookRepositoryTest {
     }
 
     @DisplayName("должен сохранять измененную книгу")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldSaveUpdatedBook() {
         var expectedBook = new Book("1", "BookTitle_10500", dbAuthors.get(2),
@@ -127,6 +135,16 @@ class MongoBookRepositoryTest {
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(returnedBook);
     }
 
+    @DisplayName(" должен удалять комментарии вместе с книгой")
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "2", "3"})
+    void shouldDeleteCommentsByBookId(String id) {
+        assertThat(commentRepository.findByBookId(id)).isNotEmpty();
+
+        bookRepository.deleteById(id);
+
+        assertThat(commentRepository.findByBookId(id)).isEmpty();
+    }
 
     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()

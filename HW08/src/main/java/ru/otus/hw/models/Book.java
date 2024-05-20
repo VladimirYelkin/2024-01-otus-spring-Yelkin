@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -24,12 +23,12 @@ public class Book {
 
     private String title;
 
-    @DBRef
+    @Field
     private Author author;
 
     private List<Genre> genres;
 
     public Book(String title, Author author, List<Genre> genres) {
-        this(null,title,author,genres);
+        this(null, title, author, genres);
     }
 }

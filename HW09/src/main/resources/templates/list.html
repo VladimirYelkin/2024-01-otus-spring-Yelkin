@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>List of all books</title>
+    <style>
+        h4 {
+            color: steelblue;
+        }
+
+        .books-tab {
+            border: 1px solid steelblue;
+            width: 1000px;
+            border-collapse: collapse;
+        }
+
+        .books-tab tr td {
+            border: 1px solid steelblue;
+        }
+
+        .books-tab-col1 {
+            width: 10px;
+            text-align: center;
+        }
+
+        .books-tab-col2 {
+            width: 100;
+            text-align: center;
+        }
+
+        .books-tab-col3 {
+            width: 300px;
+            text-align: center;
+        }
+
+        .books-tab-col4 {
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h4>Books:</h4>
+<table class="books-tab">
+    <thead>
+    <tr>
+        <th class="books-tab-col1">ID</th>
+        <th class="books-tab-col2">Title</th>
+        <th class="books-tab-col3">Author</th>
+        <th class="books-tab-col4">Genre</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${bookDtoList}">
+        <td th:text="${book.id}">id</td>
+        <td th:text="${book.title}">Book title</td>
+        <td th:text="${book.author.fullName}">Book Author</td>
+        <td>
+            <ul th:each="genre : ${book.genres()} ">
+                <li th:text="${genre.name()}">genres</li>
+            </ul>
+        <td>
+            <a th:href="@{/book/edit(id=${book.id})}" href="edit.html">Edit</a>
+            <form th:method="delete" action="#" th:action="@{/book/__${book.id}__}" >
+                <button type="submit"> Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="create.html" th:href="@{/book/create}">
+    <button type="button">Add book</button>
+</a>
+</body>
+</html>

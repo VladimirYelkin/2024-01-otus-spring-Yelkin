@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.6</version>
         <relativePath/>
     </parent>
 
@@ -173,7 +173,8 @@
 <!--        <module>HW05</module>-->
 <!--        <module>HW06</module>-->
 <!--        <module>HW07</module>-->
-        <module>HW08</module>
+<!--        <module>HW08</module>-->
+        <module>HW09</module>
     </modules>
     <build>
         <plugins>

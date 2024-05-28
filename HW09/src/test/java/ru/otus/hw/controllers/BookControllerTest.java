@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
+import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.converters.BookConverterImpl;
 import ru.otus.hw.dto.*;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
@@ -25,10 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(BookController.class)
+@Import({BookConverterImpl.class})
 class BookControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private BookConverter bookConverter;
 
     @MockBean
     private BookService bookService;
@@ -38,6 +45,8 @@ class BookControllerTest {
 
     @MockBean
     private GenreService genreService;
+
+
 
     @Test
     void shouldReturnCorrectBookList() throws Exception {

@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookCreateViewDto {
+public class BookUpdateDto {
+
+    @NotNull(message = "Id no Null")
+    private Long id;
 
     @NotBlank(message = "Not blank")
     @Size(min = 1, max = 128, message = "name min 1. max 128")

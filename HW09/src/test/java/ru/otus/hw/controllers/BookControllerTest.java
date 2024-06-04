@@ -1,5 +1,6 @@
 package ru.otus.hw.controllers;
 
+import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,35 +8,48 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.validation.BindingResult;
-import ru.otus.hw.converters.BookConverter;
-import ru.otus.hw.converters.BookConverterImpl;
-import ru.otus.hw.dto.*;
+import ru.otus.hw.converters.BookMapper;
+import ru.otus.hw.converters.BookMapperImpl;
+import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookCreateDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookUpdateDto;
+import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
-
-import java.util.List;
-import java.util.Optional;
-
 import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-
+@Import({BookMapperImpl.class})
 @WebMvcTest(BookController.class)
-@Import({BookConverterImpl.class})
 class BookControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
-    private BookConverter bookConverter;
+    private BookMapper bookMapper;
 
     @MockBean
     private BookService bookService;
@@ -45,7 +59,6 @@ class BookControllerTest {
 
     @MockBean
     private GenreService genreService;
-
 
 
     @Test
@@ -70,14 +83,14 @@ class BookControllerTest {
         var author2 = new AuthorDto(22L, "Author22");
         var titleOfBook = "Title_of_book_Test";
         var book = new BookDto(33L, titleOfBook, author1, List.of(genre2));
-        given(bookService.findById(book.id())).willReturn(Optional.of(book));
+        given(bookService.findById(book.id())).willReturn(book);
         given(authorService.findAll()).willReturn(List.of(author1, author2));
         given(genreService.findAll()).willReturn(List.of(genre1, genre2));
 
         mvc.perform(get("/book/edit").param("id", String.valueOf(book.id())))
                 .andExpect(view().name("edit_book"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("book", Matchers.is(new BookUpdateViewDto(book.id(), book.title(), author1.id(), genre2.id()))))
+                .andExpect(model().attribute("book", Matchers.is(new BookUpdateDto(book.id(), book.title(), author1.id(), genre2.id()))))
                 .andExpect(model().attribute("authors", Matchers.hasSize(2)))
                 .andExpect(model().attribute("genres", Matchers.hasSize(2)))
                 .andExpect(content().string(containsString("Edit book")))
@@ -90,7 +103,7 @@ class BookControllerTest {
         var genre2 = new GenreDto(22L, "Genre2");
         var titleOfBook = "Title_of_book_Test";
         var expectedBookDto = new BookDto(33L, titleOfBook, author1, List.of(genre2));
-        var bookUpdateDto = new BookCreateViewDto(
+        var bookUpdateDto = new BookCreateDto(
                 expectedBookDto.title(),
                 expectedBookDto.author().id(),
                 genre2.id()
@@ -101,7 +114,7 @@ class BookControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(bookService, times(1)).insert(bookUpdateDto);
+        verify(bookService, times(1)).save(bookUpdateDto);
     }
 
     @Test
@@ -113,6 +126,7 @@ class BookControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/book/create"))
                 .andExpect(flash().attributeExists("book", BindingResult.MODEL_KEY_PREFIX + "book"));
+        verify(bookService, never()).save(any(BookCreateDto.class));
     }
 
     @Test
@@ -132,6 +146,42 @@ class BookControllerTest {
                 .andExpect(redirectedUrl("/"));
         verify(bookService, only()).deleteById(3);
 
+    }
+
+    @Test
+    void shouldResponse404whenBookNotExists() throws Exception {
+        when(bookService.findById(1234L)).thenThrow(new NotFoundException());
+        mvc.perform(get("/book/edit").param("id", "1234"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldResponse500whenServicesThrowNpe() throws Exception {
+        when(bookService.findById(1234L)).thenThrow(new NullPointerException());
+        mvc.perform(get("/book/edit").param("id", "1234"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    void shouldNotCreateBookWithoutTitle() throws Exception {
+        ResultActions resultActions = mvc.perform(post("/book")
+                .param("genreId", "22"));
+//                .andExpect(header().exists()
+        resultActions.andDo(print())
+//                .andExpect(model().attributeHasFieldErrors("book", "title", "authorId"))
+//                .andExpect(content().string("'title': rejected value"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/book/create"))
+                .andExpect(flash().attributeExists("book", BindingResult.MODEL_KEY_PREFIX + "book"));
+
+        var mvcResult = resultActions.andReturn();
+        mvcResult.getResponse();
+        mvcResult.getResponse().getContentAsString();
+        mvcResult.getFlashMap();
+        mvcResult.getFlashMap().values();
+
+        mvcResult.getFlashMap().get("org.springframework.validation.BindingResult.book");
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
 }

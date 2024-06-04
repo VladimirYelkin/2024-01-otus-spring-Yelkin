@@ -4,28 +4,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.BookUpdateViewDto;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.models.Book;
 
 @Component
 @RequiredArgsConstructor
-public class BookConverterImpl implements BookConverter {
+public class BookMapperImpl implements BookMapper {
 
     @Override
-    public BookDto convert(Book book) {
+    public BookDto toDto(Book book) {
         return new BookDto(book.getId(), book.getTitle(), new AuthorDto(book.getAuthor()),
                 book.getGenres().stream().map(GenreDto::new).toList());
     }
 
     @Override
-    public BookUpdateViewDto convert(BookDto bookDto) {
-        return new BookUpdateViewDto(bookDto.id(),
+    public BookUpdateDto toDto(BookDto bookDto) {
+        return new BookUpdateDto(bookDto.id(),
                 bookDto.title(),
                 bookDto.author().id(),
                 bookDto.genres().stream()
-                        .findFirst().map(GenreDto::id).orElseThrow(() -> new EntityNotFoundException("Book not found")));
+                        .findFirst().map(GenreDto::id).orElseThrow(() -> new NotFoundException("Book not found")));
     }
 }
 

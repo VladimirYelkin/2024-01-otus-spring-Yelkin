@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
                     commentUpdated.setFullText(comment);
                     return new CommentDto(commentRepository.save(commentUpdated));
                 })
-                .orElseThrow(() -> new EntityNotFoundException("comment with id %d not found".formatted(id)));
+                .orElseThrow(() -> new NotFoundException("comment with id %d not found".formatted(id)));
     }
 
     @Override
@@ -60,6 +60,6 @@ public class CommentServiceImpl implements CommentService {
 
     private Book getBook(long bookId) {
         return bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("book with id %d not found".formatted(bookId)));
+                .orElseThrow(() -> new NotFoundException("book with id %d not found".formatted(bookId)));
     }
 }

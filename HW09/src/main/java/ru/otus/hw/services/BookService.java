@@ -1,20 +1,19 @@
 package ru.otus.hw.services;
 
 import java.util.List;
-import java.util.Optional;
-import ru.otus.hw.dto.BookCreateViewDto;
+import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.BookUpdateViewDto;
+import ru.otus.hw.dto.BookUpdateDto;
 
 public interface BookService {
 
-    Optional<BookDto> findById(long id);
+    BookDto findById(long id);
 
     List<BookDto> findAll();
 
-    BookDto insert(BookCreateViewDto bookCreateViewDto);
+    BookDto save(BookCreateDto bookCreateDto);
 
     void deleteById(long id);
 
-    void update(BookUpdateViewDto bookUpdateViewDto);
+    void update(BookUpdateDto bookUpdateDto);
 }

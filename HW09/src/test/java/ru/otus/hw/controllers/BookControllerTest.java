@@ -8,7 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import ru.otus.hw.converters.BookMapper;
 import ru.otus.hw.converters.BookMapperImpl;
@@ -40,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import({BookMapperImpl.class})
 @WebMvcTest(BookController.class)
@@ -164,24 +168,18 @@ class BookControllerTest {
 
     @Test
     void shouldNotCreateBookWithoutTitle() throws Exception {
-        ResultActions resultActions = mvc.perform(post("/book")
-                .param("genreId", "22"));
-//                .andExpect(header().exists()
-        resultActions.andDo(print())
-//                .andExpect(model().attributeHasFieldErrors("book", "title", "authorId"))
-//                .andExpect(content().string("'title': rejected value"))
+        MvcResult result = mvc.perform(post("/book")
+                        .param("genreId", "22"))
+                .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/book/create"))
-                .andExpect(flash().attributeExists("book", BindingResult.MODEL_KEY_PREFIX + "book"));
+                .andExpect(flash().attributeExists("book", BindingResult.MODEL_KEY_PREFIX + "book")).andReturn();
 
-        var mvcResult = resultActions.andReturn();
-        mvcResult.getResponse();
-        mvcResult.getResponse().getContentAsString();
-        mvcResult.getFlashMap();
-        mvcResult.getFlashMap().values();
+        var binding = (BeanPropertyBindingResult) result.getFlashMap().get("org.springframework.validation.BindingResult.book");
+        assertThat(binding.getAllErrors().size()).isEqualTo(2);
 
-        mvcResult.getFlashMap().get("org.springframework.validation.BindingResult.book");
-        System.out.println(mvcResult.getResponse().getContentAsString());
+        verify(bookService, never()).save(any(BookCreateDto.class));
+
     }
 
 }

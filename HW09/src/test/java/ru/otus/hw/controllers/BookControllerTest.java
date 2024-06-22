@@ -1,6 +1,7 @@
 package ru.otus.hw.controllers;
 
 import java.util.List;
+import java.util.Set;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import ru.otus.hw.converters.BookMapper;
@@ -23,6 +23,7 @@ import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -37,13 +38,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Import({BookMapperImpl.class})
 @WebMvcTest(BookController.class)
@@ -94,7 +92,7 @@ class BookControllerTest {
         mvc.perform(get("/book/edit").param("id", String.valueOf(book.id())))
                 .andExpect(view().name("edit_book"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("book", Matchers.is(new BookUpdateDto(book.id(), book.title(), author1.id(), genre2.id()))))
+                .andExpect(model().attribute("book", Matchers.is(new BookUpdateDto(book.id(), book.title(), author1.id(), Set.of(genre2.id())))))
                 .andExpect(model().attribute("authors", Matchers.hasSize(2)))
                 .andExpect(model().attribute("genres", Matchers.hasSize(2)))
                 .andExpect(content().string(containsString("Edit book")))
@@ -110,7 +108,7 @@ class BookControllerTest {
         var bookUpdateDto = new BookCreateDto(
                 expectedBookDto.title(),
                 expectedBookDto.author().id(),
-                genre2.id()
+                Set.of(genre2.id())
         );
 
         mvc.perform(post("/book").flashAttr("book", bookUpdateDto))

@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto findById(long id) {
         return bookRepository.findById(id)
-                .map(bookMapper::toDto).orElseThrow(()-> new NotFoundException("Book not found"));
+                .map(bookMapper::toDto).orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
     @Override
@@ -51,8 +51,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public BookDto save(BookCreateDto bookCreateDto) {
-        var book = save(0, bookCreateDto.getTitle(), bookCreateDto.getAuthorId(),
-                Set.of(bookCreateDto.getGenreId()));
+        var book = save(0, bookCreateDto.getTitle(), bookCreateDto.getAuthorId(), bookCreateDto.getGenres());
         return bookMapper.toDto(book);
     }
 
@@ -68,7 +67,7 @@ public class BookServiceImpl implements BookService {
     public void update(BookUpdateDto dto) {
         long id = dto.getId();
         bookRepository.findById(id)
-                .map(book -> save(book.getId(), dto.getTitle(), dto.getAuthorId(), Set.of(dto.getGenreId())))
+                .map(book -> save(book.getId(), dto.getTitle(), dto.getAuthorId(),dto.getGenreId()))
                 .map(bookMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id)));
     }

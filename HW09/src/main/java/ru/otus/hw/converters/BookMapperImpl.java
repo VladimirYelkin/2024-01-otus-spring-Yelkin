@@ -1,12 +1,12 @@
 package ru.otus.hw.converters;
 
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.models.Book;
 
 @Component
@@ -24,8 +24,7 @@ public class BookMapperImpl implements BookMapper {
         return new BookUpdateDto(bookDto.id(),
                 bookDto.title(),
                 bookDto.author().id(),
-                bookDto.genres().stream()
-                        .findFirst().map(GenreDto::id).orElseThrow(() -> new NotFoundException("Book not found")));
+                bookDto.genres().stream().map(GenreDto::id).collect(Collectors.toSet()));
     }
 }
 

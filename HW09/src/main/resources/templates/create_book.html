@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Create Book</title>
+    <style>
+        h4 {
+            color: steelblue;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="content">
+        <h4 style="text-align: center;">Create book</h4>
+        <form th:method="post" th:action="@{/book}" th:object="${book}" id="book_form"></form>
+        <table>
+            <tr>
+                <td >Title: </td>
+                <td>
+                    <input type="text" th:field="${book.title}"  form="book_form" required/>
+                    <div th:if="${#fields.hasErrors('${book.title}')}"
+                         th:errors="*{book.title}"
+                         class="error_message"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>Author: </td>
+                <td>
+                    <select th:field="${book.authorId}" form="book_form">
+                        <option th:each="author : ${authors}"
+                                th:value="${author.id}"
+                                th:text="${author.fullName}">Author
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Genre: </td>
+                <td>
+                    <select th:field="${book.genreId}" form="book_form">
+                        <option th:each="genre : ${genres}"
+                                th:value="${genre.id}"
+                                th:text="${genre.name}">Genre
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <button type="submit" form="book_form" >Save</button>
+                    <a th:href="@{/}">
+                        <button type="button" >Cancel</button>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -14,8 +14,8 @@ public class ExceptionController {
         return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> not(RuntimeException error) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> not(Exception error) {
         return new ResponseEntity<>(error.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -1,6 +1,7 @@
 package ru.otus.hw.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
@@ -20,8 +21,8 @@ public class BookCreateDto {
     @NotNull(message = "need Author")
     private Long authorId;
 
-    @NotNull(message = "need Genre")
-    private Set<Long> genreId;
+    @NotEmpty(message = "need Genre")
+    private Set<@NotNull Long> genreId;
 
     public Set<Long> getGenres() {
         return genreId;
